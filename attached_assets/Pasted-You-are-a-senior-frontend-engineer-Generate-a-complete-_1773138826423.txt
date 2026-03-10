@@ -1,0 +1,271 @@
+You are a senior frontend engineer.
+Generate a complete production-ready **Multi-Vendor Marketplace Frontend** project.
+
+The project must be built using:
+
+* React (Vite)
+* Redux Toolkit
+* React Router
+* Tailwind CSS
+* Component-based scalable architecture
+
+The code must be clean, modular, and follow professional frontend architecture similar to scalable e-commerce platforms.
+
+The entire project must be generated with full folder structure, reusable components, Redux state management, and responsive UI.
+
+---
+
+PROJECT NAME:
+VendorHub Marketplace
+
+---
+
+CORE REQUIREMENTS
+
+The project must include:
+
+1. Component-based architecture
+2. Reusable UI components
+3. Global state using Redux Toolkit
+4. Responsive layout
+5. Professional design system
+6. Clean folder structure
+7. Mock product data
+8. Modern UI similar to real marketplaces
+
+---
+
+FOLDER STRUCTURE
+
+Create a scalable structure:
+
+src
+├ app
+│  └ store.js
+│
+├ assets
+│  ├ images
+│  ├ icons
+│
+├ components
+│  ├ ui
+│  │  ├ Button.jsx
+│  │  ├ Input.jsx
+│  │  ├ Modal.jsx
+│  │  ├ Badge.jsx
+│  │  └ Loader.jsx
+│  │
+│  ├ product
+│  │  ├ ProductCard.jsx
+│  │  ├ ProductGrid.jsx
+│  │  └ ProductGallery.jsx
+│  │
+│  ├ layout
+│  │  ├ Navbar.jsx
+│  │  ├ Footer.jsx
+│  │  └ Container.jsx
+│
+├ features
+│  ├ cart
+│  │  └ cartSlice.js
+│  │
+│  ├ products
+│  │  └ productSlice.js
+│  │
+│  ├ wishlist
+│  │  └ wishlistSlice.js
+│
+├ pages
+│  ├ Home
+│  │  └ Home.jsx
+│  ├ ProductDetails
+│  │  └ ProductDetails.jsx
+│  ├ Cart
+│  │  └ Cart.jsx
+│  ├ Checkout
+│  │  └ Checkout.jsx
+│  ├ VendorStore
+│  │  └ VendorStore.jsx
+│
+├ hooks
+│
+├ utils
+│
+├ constants
+│
+├ App.jsx
+└ main.jsx
+
+---
+
+DESIGN SYSTEM
+
+Use a modern ecommerce design system.
+
+Color Palette:
+
+Primary: #6366F1
+Secondary: #8B5CF6
+Accent: #F59E0B
+Background: #F9FAFB
+Text: #111827
+
+Use Tailwind configuration to define these colors.
+
+---
+
+REUSABLE COMPONENTS
+
+Create reusable UI components:
+
+Button
+Input
+Select
+Modal
+Badge
+Loader
+ProductCard
+RatingStars
+
+Buttons must support variants:
+
+primary
+secondary
+outline
+
+---
+
+PAGES
+
+Create the following pages.
+
+HOME PAGE
+
+Hero section
+Featured products
+Category section
+Product grid
+Vendor highlights
+
+PRODUCT DETAILS PAGE
+
+Product gallery
+Price
+Vendor info
+Rating
+Add to cart button
+Add to wishlist
+
+CART PAGE
+
+List of cart items
+Quantity control
+Remove item
+Order summary
+
+CHECKOUT PAGE
+
+Shipping form
+Payment method UI
+Order summary
+
+VENDOR STORE PAGE
+
+Vendor information
+Vendor products grid
+
+---
+
+REDUX STATE
+
+Use Redux Toolkit.
+
+Create slices for:
+
+products
+cart
+wishlist
+
+Cart state example:
+
+cartItems
+totalQuantity
+totalPrice
+
+Implement actions:
+
+addToCart
+removeFromCart
+increaseQuantity
+decreaseQuantity
+
+---
+
+ROUTING
+
+Use React Router.
+
+Routes:
+
+/
+/product/:id
+/cart
+/checkout
+/vendor/:id
+
+---
+
+MOCK DATA
+
+Create mock products including:
+
+id
+title
+price
+rating
+vendor
+category
+image
+
+Use placeholder product images from Unsplash if real assets are not available.
+
+---
+
+RESPONSIVE DESIGN
+
+Must support:
+
+mobile
+tablet
+desktop
+
+Use Tailwind responsive utilities.
+
+---
+
+UX DETAILS
+
+Add hover effects
+Add loading states
+Add empty states for cart and wishlist
+
+---
+
+FINAL REQUIREMENT
+
+Generate the FULL working project including:
+
+All components
+Redux slices
+Pages
+Routing
+Mock data
+
+Ensure the code can run immediately after running:
+
+npm install
+npm run dev
+
+Do not skip files.
+
+Generate the complete project step-by-step.
