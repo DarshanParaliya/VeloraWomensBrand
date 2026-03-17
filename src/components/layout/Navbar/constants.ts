@@ -1,0 +1,15 @@
+import { NavItem } from './types';
+
+export const NAV_LINKS: NavItem[] = [
+  { label: 'Shop All', href: '/shop' },
+  { label: 'New Arrivals', href: '/new' },
+  { label: 'Collections', href: '/collections' },
+  { label: 'Journal', href: '/journal' },
+];
+
+export const BRAND_NAME = 'VELORA';
+
+export const NAVBAR_CONFIG = {
+  transparentScroll: true,
+  promoText: 'Complimentary shipping on orders over $250',
+};

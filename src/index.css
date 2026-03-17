@@ -1,0 +1,245 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Outfit:wght@400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-sans: 'DM Sans', sans-serif;
+    --font-display: 'Outfit', sans-serif;
+
+    /* ── Velora Brand Gradient: Deep Royal Blue → Teal-Cyan → Emerald Green ── */
+    --velora-blue:    #1B438B;
+    --velora-teal:    #0891B2;
+    --velora-green:   #10B981;
+    --velora-gradient: linear-gradient(90deg, #1B438B 0%, #0891B2 50%, #10B981 100%);
+
+    /* Neutral light background */
+    --background: 210 25% 98%;        /* #F8FAFC */
+    --foreground: 220 39% 11%;        /* near-black */
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 39% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 39% 11%;
+
+    /* Primary = Deep Royal Blue #1B438B  → hsl(218 70% 33%) */
+    --primary: 218 70% 33%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary = Teal-Cyan #0891B2 → hsl(198 90% 37%) */
+    --secondary: 198 90% 37%;
+    --secondary-foreground: 0 0% 100%;
+
+    /* Accent = Emerald Green #10B981 → hsl(160 84% 39%) */
+    --accent: 160 84% 39%;
+    --accent-foreground: 0 0% 100%;
+
+    --muted: 210 20% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 218 70% 33%;
+
+    --radius: 1rem;
+  }
+
+  .dark {
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 218 70% 33%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 198 90% 37%;
+    --secondary-foreground: 0 0% 100%;
+
+    --accent: 160 84% 39%;
+    --accent-foreground: 0 0% 100%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 218 70% 33%;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-sans);
+  }
+
+  ::selection {
+    background-color: rgba(16, 185, 129, 0.20);
+    color: #0891B2;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    @apply font-bold tracking-tight text-foreground;
+  }
+}
+
+@layer utilities {
+  /* ── Velora brand gradient utilities ── */
+  .velora-gradient {
+    background: var(--velora-gradient);
+  }
+
+  .velora-gradient-text {
+    background: var(--velora-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Hero headline gradient (replaces old text-gradient) */
+  .text-gradient {
+    background: var(--velora-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Icon accent glow ring */
+  .velora-icon-bg {
+    background: linear-gradient(135deg, rgba(27,67,139,0.12), rgba(16,185,129,0.12));
+  }
+
+  /* Glass card utility */
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-white/20 dark:bg-black/70 dark:border-white/10;
+  }
+
+  /* Gradient border trick for outline buttons */
+  .velora-outline-btn {
+    position: relative;
+    background: white;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+  .velora-outline-btn::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    padding: 2px;
+    background: var(--velora-gradient);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+}
+
+/* ── Gradient shimmer animation for buttons ── */
+@keyframes velora-shimmer {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.velora-btn {
+  background: linear-gradient(90deg, #1B438B 0%, #0891B2 50%, #10B981 100%);
+  background-size: 200% auto;
+  color: #ffffff;
+  border: none;
+  transition: background-position 0.5s ease, box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.velora-btn:hover {
+  background-position: right center;
+  box-shadow: 0 8px 30px rgba(8, 145, 178, 0.35);
+  transform: translateY(-2px);
+}
+
+.velora-btn:active {
+  transform: translateY(0px);
+  box-shadow: 0 4px 12px rgba(8, 145, 178, 0.2);
+}
+
+.btn-premium {
+  background: linear-gradient(135deg, #000000 0%, #333333 100%);
+  background-size: 200% auto;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-weight: 700;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-premium:hover {
+  background-position: right center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.btn-premium::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 25%;
+  height: 200%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.15),
+    transparent
+  );
+  transform: rotate(30deg);
+  transition: all 0.7s ease;
+  pointer-events: none;
+}
+
+.btn-premium:hover::after {
+  left: 140%;
+}
+
+/* ── Gradient icon link ── */
+.velora-nav-icon {
+  background: var(--velora-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+.velora-nav-icon:hover {
+  filter: brightness(1.2);
+  transform: scale(1.1);
+}
+
+/* ── Older animate-gradient kept for compatibility ── */
+@keyframes gradient {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.animate-gradient {
+  animation: gradient 6s linear infinite;
+}
