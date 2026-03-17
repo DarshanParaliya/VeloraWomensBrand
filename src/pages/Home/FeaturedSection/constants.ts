@@ -5,7 +5,7 @@ export const FEATURED_COLLECTIONS: FeaturedItem[] = [
     id: 'feat-1',
     title: 'Modern Architecture',
     tagline: 'Form meets function in our latest curation.',
-    imageUrl: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1487958449943-2429e8be8625?q=80&w=1200&auto=format&fit=crop',
     link: '/category/electronics',
     category: 'TECH'
   },
