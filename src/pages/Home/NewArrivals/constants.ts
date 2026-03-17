@@ -8,7 +8,7 @@ export const NEW_ARRIVALS: Product[] = [
     rating: "4.9",
     vendor: "Lumine Studio",
     category: "Home Decor",
-    image: "https://images.unsplash.com/photo-1579656335362-97bbca0bb6a5?q=80&w=1974&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1200&auto=format&fit=crop",
     description: "Luxurious silk velvet cushion in deep emerald."
   },
   {
@@ -28,7 +28,7 @@ export const NEW_ARRIVALS: Product[] = [
     rating: "4.7",
     vendor: "Nordic Wood",
     category: "Art",
-    image: "https://images.unsplash.com/photo-1544413647-b51f4323dec0?q=80&w=1974&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=1200&auto=format&fit=crop",
     description: "Hand-carved limestone sculpture for modern spaces."
   },
   {

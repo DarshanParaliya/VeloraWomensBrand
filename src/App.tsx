@@ -12,6 +12,7 @@ import ProductDetails from "@/pages/ProductDetails";
 import Cart from "@/pages/Cart";
 import Checkout from "@/pages/Checkout";
 import SellerStore from "@/pages/SellerStore/SellerStore";
+import ProductList from "@/pages/ProductList/ProductList";
 
 import { Navbar } from "@/components/layout/Navbar/Navbar";
 import { Footer } from "@/components/layout/Footer/Footer";
@@ -24,6 +25,7 @@ function Router() {
         <Switch>
           <Route path="/" component={Home} />
           <Route path="/product/:id" component={ProductDetails} />
+          <Route path="/shop" component={ProductList} />
           <Route path="/cart" component={Cart} />
           <Route path="/checkout" component={Checkout} />
           <Route path="/seller/:name" component={SellerStore} />
