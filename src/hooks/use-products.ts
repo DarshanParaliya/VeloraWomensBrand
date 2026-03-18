@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { api, buildUrl } from "@shared/routes";
-import { MOCK_PRODUCTS } from "@/pages/ProductList/mockData";
+import { MOCK_PRODUCTS } from "@/data/products";
 
 export function useProducts() {
   return useQuery({

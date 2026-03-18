@@ -69,11 +69,10 @@ export const ProductCardUI = React.forwardRef<HTMLDivElement, ProductCardUIProps
           <button
             onClick={onToggleWishlist}
             className={cn(
-              "absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white text-neutral-900 transition-all duration-300 hover:bg-neutral-900 hover:text-white shadow-md",
-              isWishlisted && "bg-neutral-900 text-white"
+              "absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white text-neutral-900 transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95"
             )}
           >
-            <Heart className={cn("h-4 w-4", isWishlisted && "fill-current")} />
+            <Heart className={cn("h-5 w-5 transition-colors duration-300", isWishlisted ? "fill-red-500 text-red-500" : "text-neutral-900")} strokeWidth={1.5} />
           </button>
 
           {/* Quick Actions Overlay */}

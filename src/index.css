@@ -9,15 +9,17 @@
     --font-sans: 'DM Sans', sans-serif;
     --font-display: 'Outfit', sans-serif;
 
-    /* ── Velora Brand Gradient: Deep Royal Blue → Teal-Cyan → Emerald Green ── */
-    --velora-blue:    #1B438B;
-    --velora-teal:    #0891B2;
-    --velora-green:   #10B981;
-    --velora-gradient: linear-gradient(90deg, #1B438B 0%, #0891B2 50%, #10B981 100%);
+    /* ── Velora Brand Identity: Absolute Monochrome Luxury ── */
+    --velora-black: #000000;
+    --velora-gray: #737373;
+    --velora-white: #FFFFFF;
+    --velora-gradient: linear-gradient(90deg, #000000 0%, #333333 50%, #000000 100%);
 
     /* Neutral light background */
-    --background: 210 25% 98%;        /* #F8FAFC */
-    --foreground: 220 39% 11%;        /* near-black */
+    --background: 210 25% 98%;
+    /* #F8FAFC */
+    --foreground: 220 39% 11%;
+    /* near-black */
 
     --card: 0 0% 100%;
     --card-foreground: 220 39% 11%;
@@ -25,16 +27,16 @@
     --popover: 0 0% 100%;
     --popover-foreground: 220 39% 11%;
 
-    /* Primary = Deep Royal Blue #1B438B  → hsl(218 70% 33%) */
-    --primary: 218 70% 33%;
+    /* Primary = Solid Black */
+    --primary: 0 0% 0%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary = Teal-Cyan #0891B2 → hsl(198 90% 37%) */
-    --secondary: 198 90% 37%;
+    /* Secondary = Dark Gray */
+    --secondary: 0 0% 9%;
     --secondary-foreground: 0 0% 100%;
 
-    /* Accent = Emerald Green #10B981 → hsl(160 84% 39%) */
-    --accent: 160 84% 39%;
+    /* Accent = Black Accent */
+    --accent: 0 0% 0%;
     --accent-foreground: 0 0% 100%;
 
     --muted: 210 20% 96%;
@@ -102,6 +104,7 @@
 }
 
 @layer utilities {
+
   /* ── Velora brand gradient utilities ── */
   .velora-gradient {
     background: var(--velora-gradient);
@@ -124,7 +127,7 @@
 
   /* Icon accent glow ring */
   .velora-icon-bg {
-    background: linear-gradient(135deg, rgba(27,67,139,0.12), rgba(16,185,129,0.12));
+    background: linear-gradient(135deg, rgba(27, 67, 139, 0.12), rgba(16, 185, 129, 0.12));
   }
 
   /* Glass card utility */
@@ -139,6 +142,7 @@
     border: 2px solid transparent;
     background-clip: padding-box;
   }
+
   .velora-outline-btn::before {
     content: '';
     position: absolute;
@@ -156,22 +160,33 @@
 
 /* ── Gradient shimmer animation for buttons ── */
 @keyframes velora-shimmer {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .velora-btn {
-  background: linear-gradient(90deg, #1B438B 0%, #0891B2 50%, #10B981 100%);
-  background-size: 200% auto;
+  background: #000000;
   color: #ffffff;
-  border: none;
-  transition: background-position 0.5s ease, box-shadow 0.3s ease, transform 0.2s ease;
+  border: 1px solid #000000;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-weight: 700;
 }
 
 .velora-btn:hover {
-  background-position: right center;
-  box-shadow: 0 8px 30px rgba(8, 145, 178, 0.35);
+  background: #ffffff;
+  color: #000000;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   transform: translateY(-2px);
 }
 
@@ -206,12 +221,10 @@
   left: -60%;
   width: 25%;
   height: 200%;
-  background: linear-gradient(
-    to right,
-    transparent,
-    rgba(255, 255, 255, 0.15),
-    transparent
-  );
+  background: linear-gradient(to right,
+      transparent,
+      rgba(255, 255, 255, 0.15),
+      transparent);
   transform: rotate(30deg);
   transition: all 0.7s ease;
   pointer-events: none;
@@ -229,6 +242,7 @@
   background-clip: text;
   transition: filter 0.2s ease, transform 0.2s ease;
 }
+
 .velora-nav-icon:hover {
   filter: brightness(1.2);
   transform: scale(1.1);
@@ -236,10 +250,19 @@
 
 /* ── Older animate-gradient kept for compatibility ── */
 @keyframes gradient {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
+
 .animate-gradient {
   animation: gradient 6s linear infinite;
 }

@@ -2,7 +2,9 @@ import React from "react";
 import { Container } from "@/components/layout/Container";
 import { ProductGrid } from "@/components/product/ProductGrid";
 import { Link } from "wouter";
-import { FEATURED_PIECES } from "./constants";
+import { MOCK_PRODUCTS } from "@/data/products";
+
+const FEATURED_PIECES = MOCK_PRODUCTS.filter(p => p.isFeatured);
 
 export const FeaturedPieces: React.FC = () => {
   return (

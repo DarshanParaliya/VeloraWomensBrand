@@ -13,7 +13,7 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps) {
   const dispatch = useAppDispatch();
   const { toast } = useToast();
-  const isWishlisted = useAppSelector((state) => 
+  const isWishlisted = useAppSelector((state) =>
     state.wishlist.items.some((item) => item.id === product.id)
   );
 

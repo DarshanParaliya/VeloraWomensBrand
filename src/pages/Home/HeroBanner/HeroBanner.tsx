@@ -38,13 +38,13 @@ export const HeroBanner: React.FC = () => {
         <h2 className="text-4xl md:text-7xl font-light text-white tracking-[0.2em] mb-10 max-w-4xl">
           {slide.title}
         </h2>
-        
+
         <Link href={slide.ctaLink}>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             className="group bg-white/10 backdrop-blur-sm text-white border-white hover:bg-white hover:text-black transition-all duration-500 px-12 py-7 rounded-none tracking-[0.3em] text-[10px]"
           >
-            {slide.ctaText} 
+            {slide.ctaText}
             <ArrowRight className="ml-3 h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Button>
         </Link>
@@ -56,9 +56,8 @@ export const HeroBanner: React.FC = () => {
           <button
             key={index}
             onClick={() => setCurrentSlide(index)}
-            className={`h-[1px] w-16 transition-all duration-700 ${
-              currentSlide === index ? "bg-white" : "bg-white/30"
-            }`}
+            className={`h-[1px] w-16 transition-all duration-700 ${currentSlide === index ? "bg-white" : "bg-white/30"
+              }`}
           />
         ))}
       </div>

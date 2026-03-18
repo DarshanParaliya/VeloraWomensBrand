@@ -8,7 +8,7 @@ import { store } from "@/store";
 
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home/Home";
-import ProductDetails from "@/pages/ProductDetails";
+import ProductDetail from "@/pages/Product/ProductDetail/ProductDetail";
 import Cart from "@/pages/Cart";
 import Checkout from "@/pages/Checkout";
 import SellerStore from "@/pages/SellerStore/SellerStore";
@@ -24,7 +24,7 @@ function Router() {
       <div className="flex-1">
         <Switch>
           <Route path="/" component={Home} />
-          <Route path="/product/:id" component={ProductDetails} />
+          <Route path="/product/:id" component={ProductDetail} />
           <Route path="/shop" component={ProductList} />
           <Route path="/cart" component={Cart} />
           <Route path="/checkout" component={Checkout} />

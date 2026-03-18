@@ -1,7 +1,9 @@
 import React from "react";
 import { Container } from "@/components/layout/Container";
 import { ProductGrid } from "@/components/product/ProductGrid";
-import { NEW_ARRIVALS } from "./constants";
+import { MOCK_PRODUCTS } from "@/data/products";
+
+const NEW_ARRIVALS = MOCK_PRODUCTS.filter(p => p.isNew);
 
 export const NewArrivals: React.FC = () => {
   return (

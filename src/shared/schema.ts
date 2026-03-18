@@ -8,6 +8,8 @@ export const insertProductSchema = z.object({
   category: z.string(),
   image: z.string(),
   description: z.string().nullable(),
+  isNew: z.boolean().default(false),
+  isFeatured: z.boolean().default(false),
 });
 
 export const productSchema = insertProductSchema.extend({
