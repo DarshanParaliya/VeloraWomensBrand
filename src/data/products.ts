@@ -456,5 +456,185 @@ export const MOCK_PRODUCTS: Product[] = [
     description: "Natural rattan tray with intricate weave pattern.",
     isNew: true,
     isFeatured: false
+  },
+
+  // ── Oversized Tees ──────────────────────────────────────────────────────────
+  {
+    id: 301,
+    title: "Velora Oversized Drop-Shoulder Tee",
+    price: "89.00",
+    rating: "4.8",
+    vendor: "Velora Essentials",
+    category: "Oversized Tees",
+    image: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=1000&auto=format&fit=crop",
+    description: "Heavyweight cotton tee with a generous drop-shoulder silhouette. The everyday essential, redefined.",
+    isNew: true,
+    isFeatured: true
+  },
+  {
+    id: 302,
+    title: "Washed Black Graphic Tee",
+    price: "79.00",
+    rating: "4.6",
+    vendor: "Velora Essentials",
+    category: "Oversized Tees",
+    image: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=1000&auto=format&fit=crop",
+    description: "Enzyme-washed oversized tee in faded black with a subtle vintage feel.",
+    isNew: true,
+    isFeatured: false
+  },
+  {
+    id: 303,
+    title: "Cream Boxy Crew Tee",
+    price: "75.00",
+    rating: "4.5",
+    vendor: "Velora Essentials",
+    category: "Oversized Tees",
+    image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=1000&auto=format&fit=crop",
+    description: "Soft-washed boxy crop tee in off-white. Pairs effortlessly with everything.",
+    isNew: false,
+    isFeatured: false
+  },
+
+  // ── Hoodies ─────────────────────────────────────────────────────────────────
+  {
+    id: 401,
+    title: "Velora Archive Hoodie",
+    price: "145.00",
+    rating: "4.9",
+    vendor: "Velora Archive",
+    category: "Hoodies",
+    image: "https://images.unsplash.com/photo-1556821840-3a63f15732ce?q=80&w=1000&auto=format&fit=crop",
+    description: "Heavyweight French terry hoodie with a relaxed silhouette. A Velora staple.",
+    isNew: true,
+    isFeatured: true
+  },
+  {
+    id: 402,
+    title: "Zip-Through Oversized Hoodie",
+    price: "165.00",
+    rating: "4.7",
+    vendor: "Velora Essentials",
+    category: "Hoodies",
+    image: "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=1000&auto=format&fit=crop",
+    description: "Premium zip-through hoodie in melange grey with brushed interior.",
+    isNew: false,
+    isFeatured: false
+  },
+  {
+    id: 403,
+    title: "Velora Essential Pullover Hoodie",
+    price: "125.00",
+    rating: "4.8",
+    vendor: "Velora Essentials",
+    category: "Hoodies",
+    image: "https://images.unsplash.com/photo-1509942774463-acf339cf87d5?q=80&w=1000&auto=format&fit=crop",
+    description: "Classic pullover hoodie in 100% organic cotton with a kangaroo pocket.",
+    isNew: true,
+    isFeatured: false
+  },
+
+  // ── Cargo Pants ─────────────────────────────────────────────────────────────
+  {
+    id: 501,
+    title: "Technical Cargo Trousers",
+    price: "215.00",
+    rating: "4.7",
+    vendor: "Velora Studio",
+    category: "Cargo Pants",
+    image: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?q=80&w=1000&auto=format&fit=crop",
+    description: "Relaxed-fit cargo trousers in a durable ripstop fabric with utility pockets.",
+    isNew: true,
+    isFeatured: true
+  },
+  {
+    id: 502,
+    title: "Washed Olive Cargo Pants",
+    price: "185.00",
+    rating: "4.6",
+    vendor: "Velora Studio",
+    category: "Cargo Pants",
+    image: "https://images.unsplash.com/photo-1517445312882-bc9910d016b7?q=80&w=1000&auto=format&fit=crop",
+    description: "Six-pocket cargo pants in enzyme-washed olive with adjustable ankle cuffs.",
+    isNew: false,
+    isFeatured: false
+  },
+
+  // ── Summer Collection ────────────────────────────────────────────────────────
+  {
+    id: 601,
+    title: "Linen Co-Ord Set",
+    price: "255.00",
+    rating: "4.8",
+    vendor: "Velora Archive",
+    category: "Summer Collection",
+    image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1000&auto=format&fit=crop",
+    description: "Matching linen shirt and shorts set. Lightweight, breathable, and effortlessly chic.",
+    isNew: true,
+    isFeatured: true
+  },
+  {
+    id: 602,
+    title: "Cotton Slip Sundress",
+    price: "175.00",
+    rating: "4.7",
+    vendor: "Velora Archive",
+    category: "Summer Collection",
+    image: "https://images.unsplash.com/photo-1495385794356-15371f348c31?q=80&w=1000&auto=format&fit=crop",
+    description: "Breezy cotton slip dress with adjustable spaghetti straps and a subtle sheen.",
+    isNew: true,
+    isFeatured: false
+  },
+
+  // ── Streetwear ───────────────────────────────────────────────────────────────
+  {
+    id: 701,
+    title: "Velora Bomber Jacket",
+    price: "320.00",
+    rating: "4.9",
+    vendor: "Velora Studio",
+    category: "Streetwear",
+    image: "https://images.unsplash.com/photo-1548126032-079a0fb0099d?q=80&w=1000&auto=format&fit=crop",
+    description: "Satin bomber with embroidered branding. The definitive streetwear staple.",
+    isNew: true,
+    isFeatured: true
+  },
+  {
+    id: 702,
+    title: "Relaxed Track Pants",
+    price: "135.00",
+    rating: "4.6",
+    vendor: "Velora Essentials",
+    category: "Streetwear",
+    image: "https://images.unsplash.com/photo-1542272604-787c3835535d?q=80&w=1000&auto=format&fit=crop",
+    description: "Wide-leg track pants in a soft tricot weave with logo taping down the leg.",
+    isNew: false,
+    isFeatured: false
+  },
+
+  // ── Minimalist Essentials ────────────────────────────────────────────────────
+  {
+    id: 801,
+    title: "Clean Slim Chino",
+    price: "165.00",
+    rating: "4.5",
+    vendor: "Velora Essentials",
+    category: "Minimalist Essentials",
+    image: "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?q=80&w=1000&auto=format&fit=crop",
+    description: "Slim-straight cotton chino in warm ecru. The cornerstone of a minimal wardrobe.",
+    isNew: false,
+    isFeatured: false
+  },
+  {
+    id: 802,
+    title: "Compact Cotton Mock-Neck",
+    price: "110.00",
+    rating: "4.7",
+    vendor: "Velora Essentials",
+    category: "Minimalist Essentials",
+    image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?q=80&w=1000&auto=format&fit=crop",
+    description: "Fitted mock-neck long-sleeve in a compact cotton pique. Understated perfection.",
+    isNew: true,
+    isFeatured: false
   }
 ];

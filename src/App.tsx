@@ -16,11 +16,16 @@ import ProductList from "@/pages/ProductList/ProductList";
 
 import { Navbar } from "@/components/layout/Navbar/Navbar";
 import { Footer } from "@/components/layout/Footer/Footer";
+import { SearchOverlay } from "@/components/layout/SearchOverlay";
+import { useState } from "react";
 
 function Router() {
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
+      <Navbar onSearchClick={() => setIsSearchOpen(true)} />
+      <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
       <div className="flex-1">
         <Switch>
           <Route path="/" component={Home} />

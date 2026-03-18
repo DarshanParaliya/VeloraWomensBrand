@@ -6,7 +6,11 @@ import { Container } from "../Container";
 import { BRAND_NAME, NAV_LINKS } from "./constants";
 import { NavItem } from "./types";
 
-export const Navbar: React.FC = () => {
+export interface NavbarProps {
+  onSearchClick?: () => void;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({ onSearchClick }) => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -48,7 +52,10 @@ export const Navbar: React.FC = () => {
 
           {/* Icons */}
           <div className="flex items-center space-x-5">
-            <button className="hidden sm:block hover:opacity-60 transition-opacity">
+            <button
+              onClick={onSearchClick}
+              className="hidden sm:block hover:opacity-60 transition-opacity"
+            >
               <Search size={20} strokeWidth={1.5} />
             </button>
             <button className="hover:opacity-60 transition-opacity">

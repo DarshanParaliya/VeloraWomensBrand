@@ -4,7 +4,7 @@ import { ProductGrid } from "@/components/product/ProductGrid";
 import { Link } from "wouter";
 import { MOCK_PRODUCTS } from "@/data/products";
 
-const FEATURED_PIECES = MOCK_PRODUCTS.filter(p => p.isFeatured);
+const FEATURED_PIECES = MOCK_PRODUCTS.filter(p => p.isFeatured).slice(0, 4);
 
 export const FeaturedPieces: React.FC = () => {
   return (

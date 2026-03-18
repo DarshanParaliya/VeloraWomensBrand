@@ -1,4 +1,4 @@
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { Product } from "@shared/schema";
 import { useAppDispatch, useAppSelector } from "@/hooks/use-redux";
 import { addToCart } from "@/store/cartSlice";
@@ -13,6 +13,7 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps) {
   const dispatch = useAppDispatch();
   const { toast } = useToast();
+  const [, navigate] = useLocation();
   const isWishlisted = useAppSelector((state) =>
     state.wishlist.items.some((item) => item.id === product.id)
   );
@@ -31,12 +32,10 @@ export function ProductCard({ product }: ProductCardProps) {
     dispatch(toggleWishlist(product));
   };
 
+  // Quick View → redirect to dedicated ProductDetail page
   const handleQuickView = (e: React.MouseEvent) => {
     e.preventDefault();
-    toast({
-      title: "Quick View",
-      description: `Viewing details for ${product.title}`,
-    });
+    navigate(`/product/${product.id}`);
   };
 
   return (

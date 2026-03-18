@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "wouter";
+import React, { useState, useMemo } from "react";
+import { Link, useLocation } from "wouter";
 import { Product } from "@shared/schema";
 import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,7 @@ import {
   RotateCcw,
   Star,
   ShoppingBag,
-  Zap
+  ArrowRight,
 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/hooks/use-redux";
 import { addToCart } from "@/store/cartSlice";
@@ -24,17 +24,37 @@ import { useToast } from "@/hooks/use-toast";
 import { useRoute } from "wouter";
 import { useProduct } from "@/hooks/use-products";
 import { Loader2 } from "lucide-react";
+import { MOCK_PRODUCTS } from "@/data/products";
+import { ProductCard } from "@/components/product/ProductCard";
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Config
+// ─────────────────────────────────────────────────────────────────────────────
+const SIZES = ["XS", "S", "M", "L", "XL"];
+const MAX_RELATED = 4;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Props
+// ─────────────────────────────────────────────────────────────────────────────
 interface ProductDetailCardProps {
-  product?: Product; // Pass product directly if available
-  params?: { id?: string }; // wouter passes params to route components
+  /** Pass product directly if already available (e.g. from a parent component). */
+  product?: Product;
+  /** wouter passes route params to route components via this prop. */
+  params?: { id?: string };
+  /**
+   * Optional pre-filtered list of related products.
+   * If omitted the component derives the list internally from MOCK_PRODUCTS.
+   */
+  relatedProducts?: Product[];
 }
 
-const SIZES = ["XS", "S", "M", "L", "XL"];
-
+// ─────────────────────────────────────────────────────────────────────────────
+// Smart Component
+// ─────────────────────────────────────────────────────────────────────────────
 export const ProductDetailCard: React.FC<ProductDetailCardProps> = ({
   product: initialProduct,
-  params: routeParams
+  params: routeParams,
+  relatedProducts: externalRelated,
 }) => {
   const [, wouterParams] = useRoute("/product/:id");
   const params = routeParams || wouterParams;
@@ -50,7 +70,20 @@ export const ProductDetailCard: React.FC<ProductDetailCardProps> = ({
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const dispatch = useAppDispatch();
   const { toast } = useToast();
+  const [, navigate] = useLocation();
 
+  // ── Related Products (Smart Filtering) ──────────────────────────────────
+  const relatedProducts = useMemo<Product[]>(() => {
+    // Prefer externally supplied list
+    if (externalRelated) return externalRelated.slice(0, MAX_RELATED);
+    if (!product) return [];
+
+    return MOCK_PRODUCTS.filter(
+      (p) => p.category === product.category && p.id !== product.id,
+    ).slice(0, MAX_RELATED);
+  }, [product, externalRelated]);
+
+  // ── Loading / Error States ───────────────────────────────────────────────
   if (isLoading && !initialProduct) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
@@ -72,10 +105,13 @@ export const ProductDetailCard: React.FC<ProductDetailCardProps> = ({
 
   if (!product) return null;
 
+  // ── Wishlist State ───────────────────────────────────────────────────────
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const isWishlisted = useAppSelector((state) =>
-    state.wishlist.items.some((item) => item.id === product.id)
+    state.wishlist.items.some((item) => item.id === product.id),
   );
 
+  // ── Handlers ────────────────────────────────────────────────────────────
   const handleAddToCart = () => {
     if (!selectedSize) {
       toast({
@@ -108,10 +144,11 @@ export const ProductDetailCard: React.FC<ProductDetailCardProps> = ({
     });
   };
 
+  // ── Render ───────────────────────────────────────────────────────────────
   return (
     <main className="min-h-screen bg-white pt-32 pb-24">
       <Container>
-        {/* Breadcrumbs */}
+        {/* ── Breadcrumbs ─────────────────────────────────────────────── */}
         <nav className="flex items-center gap-4 text-[10px] tracking-[0.2em] uppercase text-neutral-400 mb-16">
           <Link href="/" className="hover:text-neutral-900 transition-colors">Home</Link>
           <ChevronRight size={10} />
@@ -120,6 +157,7 @@ export const ProductDetailCard: React.FC<ProductDetailCardProps> = ({
           <span className="text-neutral-900 truncate max-w-[200px]">{product.title}</span>
         </nav>
 
+        {/* ── Product Detail ───────────────────────────────────────────── */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 xl:gap-24">
           {/* Product Image */}
           <div className="lg:col-span-7">
@@ -142,7 +180,7 @@ export const ProductDetailCard: React.FC<ProductDetailCardProps> = ({
               </button>
             </motion.div>
 
-            {/* Optional Gallery if product has multiple images, otherwise match original clean look */}
+            {/* Gallery strip */}
             <div className="grid grid-cols-4 gap-4 mt-4">
               {[1, 2, 3, 4].map((i) => (
                 <div key={i} className="aspect-[4/5] bg-neutral-50 overflow-hidden cursor-pointer">
@@ -193,7 +231,7 @@ export const ProductDetailCard: React.FC<ProductDetailCardProps> = ({
 
               {/* Interaction Block */}
               <div className="space-y-8 bg-neutral-50 p-8 rounded-2xl border border-neutral-100">
-                {/* Size Selector (Enhanced addition) */}
+                {/* Size Selector */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <label className="text-[10px] tracking-[0.2em] uppercase font-bold text-neutral-900">Size</label>
@@ -259,7 +297,7 @@ export const ProductDetailCard: React.FC<ProductDetailCardProps> = ({
               {/* Details Tabs */}
               <div className="space-y-8">
                 <div className="flex gap-8 border-b border-neutral-100">
-                  {["Description", "Shipping", "Care"].map(tab => (
+                  {["Description", "Shipping", "Care"].map((tab) => (
                     <button
                       key={tab}
                       onClick={() => setActiveTab(tab)}
@@ -317,6 +355,56 @@ export const ProductDetailCard: React.FC<ProductDetailCardProps> = ({
             </motion.div>
           </div>
         </div>
+
+        {/* ── Related Products Section ─────────────────────────────────── */}
+        {relatedProducts.length > 0 && (
+          <motion.section
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.8 }}
+            className="mt-32"
+            aria-label="Related products"
+          >
+            {/* Section header */}
+            <div className="flex items-center gap-6 mb-12">
+              <div className="flex-1 h-px bg-neutral-100" />
+              <div className="text-center space-y-1">
+                <p className="text-[9px] uppercase tracking-[0.5em] text-neutral-400 font-bold">
+                  You May Also Like
+                </p>
+                <h2 className="text-2xl md:text-3xl font-light tracking-[0.15em] uppercase text-neutral-900">
+                  More in {product.category}
+                </h2>
+              </div>
+              <div className="flex-1 h-px bg-neutral-100" />
+            </div>
+
+            {/* Related Products Grid */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+              {relatedProducts.map((related, index) => (
+                <motion.div
+                  key={related.id}
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.7 + index * 0.1, duration: 0.6, ease: [0.32, 0.72, 0, 1] }}
+                >
+                  <ProductCard product={related} />
+                </motion.div>
+              ))}
+            </div>
+
+            {/* CTA — view entire category */}
+            <div className="flex justify-center mt-16">
+              <Link
+                href={`/shop?category=${encodeURIComponent(product.category)}`}
+                className="group flex items-center gap-3 text-[10px] uppercase tracking-[0.4em] font-bold text-neutral-900 border-b border-neutral-900 pb-1 hover:gap-5 transition-all duration-300"
+              >
+                View All {product.category}
+                <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform duration-300" />
+              </Link>
+            </div>
+          </motion.section>
+        )}
       </Container>
     </main>
   );
