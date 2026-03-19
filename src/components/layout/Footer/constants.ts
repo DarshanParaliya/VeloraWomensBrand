@@ -4,23 +4,21 @@ export const FOOTER_SECTIONS: FooterSection[] = [
   {
     title: "SHOP",
     links: [
-      { label: "New Arrivals", href: "/new" },
-      { label: "Best Sellers", href: "/best-sellers" },
-      { label: "Collections", href: "/collections" },
-      { label: "Sale", href: "/sale" },
+      { label: "All Products", href: "/products" },
+      { label: "New Arrivals", href: "/products?filter=new" },
     ],
   },
   {
-    title: "COMPANY",
+    title: "INFORMATION",
     links: [
       { label: "Our Story", href: "/about" },
       { label: "Sustainability", href: "/sustainability" },
-      { label: "Journal", href: "/journal" },
-      { label: "Contact", href: "/contact" },
+      { label: "Careers", href: "/careers" },
+      { label: "Contact Us", href: "/contact" },
     ],
   },
   {
-    title: "HELP",
+    title: "CLIENT SERVICES",
     links: [
       { label: "Shipping & Returns", href: "/shipping" },
       { label: "Size Guide", href: "/size-guide" },
@@ -36,4 +34,4 @@ export const SOCIAL_LINKS: SocialLink[] = [
   { platform: "Twitter", href: "https://twitter.com", icon: "twitter" },
 ];
 
-export const COPYRIGHT_TEXT = "© 2024 VELORA. ALL RIGHTS RESERVED.";
+export const COPYRIGHT_TEXT = "© 2026 VELORA. ALL RIGHTS RESERVED.";

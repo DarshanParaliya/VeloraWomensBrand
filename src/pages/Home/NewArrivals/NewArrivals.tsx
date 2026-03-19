@@ -2,7 +2,7 @@ import React from "react";
 import { Container } from "@/components/layout/Container";
 import { ProductGrid } from "@/components/product/ProductGrid";
 import { MOCK_PRODUCTS } from "@/data/products";
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 
 const NEW_ARRIVALS = MOCK_PRODUCTS.filter(p => p.isNew);
 
@@ -18,7 +18,7 @@ export const NewArrivals: React.FC = () => {
         {NEW_ARRIVALS.length > 4 && (
           <div className="text-center mt-6">
             <Link
-              href="/shop"
+              to="/products?filter=new"
               className="inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] font-bold text-neutral-900 border-b border-neutral-900 pb-1 hover:text-neutral-500 hover:border-neutral-500 transition-colors"
             >
               View All New Arrivals

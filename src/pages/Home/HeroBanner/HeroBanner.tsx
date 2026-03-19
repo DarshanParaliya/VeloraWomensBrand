@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ArrowRight } from "lucide-react";
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 import { HERO_SLIDES } from "./constants";
 import { BannerSlide } from "./types";
 import { Button } from "@/components/ui/button";
@@ -39,7 +39,7 @@ export const HeroBanner: React.FC = () => {
           {slide.title}
         </h2>
 
-        <Link href={slide.ctaLink}>
+        <Link to={slide.ctaLink}>
           <Button
             variant="outline"
             className="group bg-white/10 backdrop-blur-sm text-white border-white hover:bg-white hover:text-black transition-all duration-500 px-12 py-7 rounded-none tracking-[0.3em] text-[10px]"

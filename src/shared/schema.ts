@@ -10,6 +10,7 @@ export const insertProductSchema = z.object({
   description: z.string().nullable(),
   isNew: z.boolean().default(false),
   isFeatured: z.boolean().default(false),
+  createdAt: z.string().optional(),
 });
 
 export const productSchema = insertProductSchema.extend({

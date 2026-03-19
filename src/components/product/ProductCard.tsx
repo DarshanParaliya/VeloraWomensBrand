@@ -1,4 +1,4 @@
-import { Link, useLocation } from "wouter";
+import { Link, useNavigate } from "react-router-dom";
 import { Product } from "@shared/schema";
 import { useAppDispatch, useAppSelector } from "@/hooks/use-redux";
 import { addToCart } from "@/store/cartSlice";
@@ -13,7 +13,7 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps) {
   const dispatch = useAppDispatch();
   const { toast } = useToast();
-  const [, navigate] = useLocation();
+  const navigate = useNavigate();
   const isWishlisted = useAppSelector((state) =>
     state.wishlist.items.some((item) => item.id === product.id)
   );
@@ -51,7 +51,7 @@ export function ProductCard({ product }: ProductCardProps) {
       onAddToCart={handleAddToCart}
       onToggleWishlist={handleToggleWishlist}
       onQuickView={handleQuickView}
-      href={`/product/${product.id}`}
+      to={`/product/${product.id}`}
       LinkComponent={Link}
     />
   );

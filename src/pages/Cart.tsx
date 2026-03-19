@@ -2,7 +2,7 @@ import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/button";
 import { useAppDispatch, useAppSelector } from "@/hooks/use-redux";
 import { removeFromCart, updateQuantity } from "@/store/cartSlice";
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 import { Trash2, ShoppingBag, ArrowRight } from "lucide-react";
 
 export default function Cart() {
@@ -19,7 +19,7 @@ export default function Cart() {
         <p className="text-muted-foreground mb-8 max-w-md">
           Looks like you haven't added anything to your cart yet. Discover amazing products from our vendors.
         </p>
-        <Link href="/">
+        <Link to="/">
           <Button size="lg" className="rounded-full px-8">
             Start Shopping
           </Button>
@@ -38,7 +38,7 @@ export default function Cart() {
           <div className="lg:col-span-2 space-y-6">
             {items.map((item) => (
               <div key={item.product.id} className="bg-card rounded-2xl p-4 sm:p-6 flex gap-4 sm:gap-6 border border-border shadow-sm">
-                <Link href={`/product/${item.product.id}`} className="shrink-0">
+                <Link to={`/product/${item.product.id}`} className="shrink-0">
                   <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-xl overflow-hidden bg-muted">
                     <img 
                       src={item.product.image} 
@@ -51,10 +51,10 @@ export default function Cart() {
                 <div className="flex-1 flex flex-col justify-between">
                   <div className="flex justify-between items-start gap-4">
                     <div>
-                      <Link href={`/vendor/${item.product.vendor}`} className="text-sm text-primary font-medium hover:underline mb-1 inline-block">
+                      <Link to={`/seller/${item.product.vendor}`} className="text-sm text-primary font-medium hover:underline mb-1 inline-block">
                         {item.product.vendor}
                       </Link>
-                      <Link href={`/product/${item.product.id}`}>
+                      <Link to={`/product/${item.product.id}`}>
                         <h3 className="font-display font-semibold text-lg sm:text-xl text-foreground line-clamp-2 hover:text-primary transition-colors">
                           {item.product.title}
                         </h3>
@@ -122,7 +122,7 @@ export default function Cart() {
                 <p className="text-xs text-muted-foreground text-right">USD inclusive of VAT if applicable</p>
               </div>
 
-              <Link href="/checkout">
+              <Link to="/checkout">
                 <Button size="lg" className="w-full h-14 text-lg rounded-xl shadow-lg shadow-primary/20">
                   Proceed to Checkout <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>

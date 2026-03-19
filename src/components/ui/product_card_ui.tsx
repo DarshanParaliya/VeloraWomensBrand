@@ -16,7 +16,7 @@ export interface ProductCardUIProps {
   onQuickView?: (e: React.MouseEvent) => void;
   isWishlisted?: boolean;
   className?: string;
-  href?: string;
+  to?: string;
   LinkComponent?: React.ElementType;
 }
 
@@ -34,7 +34,7 @@ export const ProductCardUI = React.forwardRef<HTMLDivElement, ProductCardUIProps
       onQuickView,
       isWishlisted = false,
       className,
-      href,
+      to,
       LinkComponent = "a",
     },
     ref
@@ -49,7 +49,7 @@ export const ProductCardUI = React.forwardRef<HTMLDivElement, ProductCardUIProps
       >
         {/* Image Container with Overlay Controls */}
         <div className="relative aspect-[3/4] overflow-hidden bg-neutral-100">
-          <LinkComponent href={href} className="block h-full w-full">
+          <LinkComponent {...(LinkComponent === "a" ? { href: to } : { to })} className="block h-full w-full">
             <img
               src={image}
               alt={title}
@@ -101,7 +101,7 @@ export const ProductCardUI = React.forwardRef<HTMLDivElement, ProductCardUIProps
             )}
           </div>
 
-          <LinkComponent href={href} className="group/title block">
+          <LinkComponent {...(LinkComponent === "a" ? { href: to } : { to })} className="group/title block">
             <h3 className="mb-2 line-clamp-1 font-display text-lg font-light tracking-tight text-neutral-900 transition-colors group-hover/title:text-neutral-500">
               {title}
             </h3>

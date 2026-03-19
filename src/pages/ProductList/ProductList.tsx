@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link, useLocation } from "wouter";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { Container } from "@/components/layout/Container";
 import { ProductGrid } from "@/components/product/ProductGrid";
 import { useProducts } from "@/hooks/use-products";
@@ -14,31 +14,45 @@ import { Product } from "@shared/schema";
 
 export const ProductList: React.FC = () => {
   const { data: products, isLoading } = useProducts();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  
   const [sortBy, setSortBy] = useState("Featured");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [isNewOnly, setIsNewOnly] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string | null>(null);
   const [urlCategory, setUrlCategory] = useState<string | null>(null);
   const [featuredId, setFeaturedId] = useState<number | null>(null);
-  const [, navigate] = useLocation();
 
   // Read all URL params on mount and on URL change
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const q = params.get("query");
-    const cat = params.get("category");
-    const id = params.get("id");
+    const q = searchParams.get("query");
+    const cat = searchParams.get("category");
+    const id = searchParams.get("id");
+    const sort = searchParams.get("sort");
+    const filter = searchParams.get("filter");
 
     setSearchQuery(q ? decodeURIComponent(q) : null);
     setUrlCategory(cat ? decodeURIComponent(cat) : null);
     setFeaturedId(id ? parseInt(id, 10) : null);
 
-    // Clear the local sidebar category when a new search or URL navigation occurs
-    // This gives priority to the search bar and prevents simultaneous category filtering
+    if (sort === "new" || filter === "new") {
+      setSortBy("New Arrivals");
+    } else {
+      setSortBy("Featured");
+    }
+
+    if (filter === "new") {
+      setIsNewOnly(true);
+    } else {
+      setIsNewOnly(false);
+    }
+
     if (q || cat) {
       setSelectedCategory(null);
     }
-  }, [window.location.search]);
+  }, [searchParams]);
 
   // Derive unique categories from products
   const categories = useMemo(() => {
@@ -85,8 +99,20 @@ export const ProductList: React.FC = () => {
       result = result.filter(p => p.id !== featuredId);
     }
 
+    // Filter by New Arrivals only
+    if (isNewOnly) {
+      result = result.filter(p => p.isNew);
+    }
+
     // Sort
     switch (sortBy) {
+      case "New Arrivals":
+        result.sort((a, b) => {
+          const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+          const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+          return dateB - dateA;
+        });
+        break;
       case "Price: Low to High":
         result.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
         break;
@@ -103,18 +129,20 @@ export const ProductList: React.FC = () => {
     }
 
     return result;
-  }, [products, selectedCategory, sortBy, searchQuery, urlCategory, featuredId]);
+  }, [products, selectedCategory, sortBy, searchQuery, urlCategory, featuredId, isNewOnly]);
 
   const clearAllFilters = () => {
     setSearchQuery(null);
     setUrlCategory(null);
     setFeaturedId(null);
     setSelectedCategory(null);
-    navigate("/shop");
+    setIsNewOnly(false);
+    setSortBy("Featured");
+    navigate("/products");
   };
 
-  const isFiltered = !!(searchQuery || urlCategory || selectedCategory);
-  const sortOptions = ["Featured", "Price: Low to High", "Price: High to Low", "Rating"];
+  const isFiltered = !!(searchQuery || urlCategory || selectedCategory || isNewOnly);
+  const sortOptions = ["Featured", "New Arrivals", "Price: Low to High", "Price: High to Low", "Rating"];
 
   // Active label for the page header
   const activeLabel = searchQuery
@@ -157,7 +185,7 @@ export const ProductList: React.FC = () => {
               {searchQuery && (
                 <span className="flex items-center gap-2 bg-neutral-900 text-white text-[10px] uppercase tracking-[0.2em] px-3 py-1.5 rounded-full">
                   Search: "{searchQuery}"
-                  <button onClick={() => { setSearchQuery(null); navigate(urlCategory ? `/shop?category=${encodeURIComponent(urlCategory)}` : "/shop"); }}>
+                  <button onClick={() => { setSearchQuery(null); navigate(urlCategory ? `/products?category=${encodeURIComponent(urlCategory)}` : "/products"); }}>
                     <X size={10} />
                   </button>
                 </span>
@@ -166,6 +194,14 @@ export const ProductList: React.FC = () => {
                 <span className="flex items-center gap-2 bg-neutral-900 text-white text-[10px] uppercase tracking-[0.2em] px-3 py-1.5 rounded-full">
                   {urlCategory}
                   <button onClick={clearAllFilters}><X size={10} /></button>
+                </span>
+              )}
+              {isNewOnly && (
+                <span className="flex items-center gap-2 bg-neutral-900 text-white text-[10px] uppercase tracking-[0.2em] px-3 py-1.5 rounded-full">
+                  New Arrivals
+                  <button onClick={() => { setIsNewOnly(false); setSortBy("Featured"); navigate("/products"); }}>
+                    <X size={10} />
+                  </button>
                 </span>
               )}
               <button
@@ -239,7 +275,7 @@ export const ProductList: React.FC = () => {
                           setIsFilterOpen(false);
                           // Clear the main search/category URL parameters so they don't fight with the sidebar
                           if (urlCategory || searchQuery || featuredId) {
-                            navigate("/shop");
+                            navigate("/products");
                           }
                         }}
                         className={`text-left text-[11px] tracking-[0.1em] uppercase transition-colors ${selectedCategory === category ? "text-neutral-900 font-bold" : "text-neutral-500"}`}
@@ -252,7 +288,7 @@ export const ProductList: React.FC = () => {
                         setSelectedCategory(null);
                         setIsFilterOpen(false);
                         if (urlCategory || searchQuery || featuredId) {
-                          navigate("/shop");
+                          navigate("/products");
                         }
                       }}
                       className={`text-left text-[11px] tracking-[0.1em] uppercase transition-colors ${!selectedCategory ? "text-neutral-900 font-bold" : "text-neutral-500"}`}

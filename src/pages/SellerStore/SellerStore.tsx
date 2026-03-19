@@ -1,5 +1,5 @@
 import React from "react";
-import { useRoute } from "wouter";
+import { useParams } from "react-router-dom";
 import { useVendorProducts } from "@/hooks/use-products";
 import { Container } from "@/components/layout/Container";
 import { ProductGrid } from "@/components/product/ProductGrid";
@@ -7,7 +7,7 @@ import { MapPin, Star, ShieldCheck } from "lucide-react";
 import { SELLER_STORE_CONFIG, DEFAULT_MOCK_STATS } from "./constants";
 
 export const SellerStore: React.FC = () => {
-  const [, params] = useRoute("/seller/:name");
+  const params = useParams();
   const sellerName = decodeURIComponent(params?.name || "Premium Seller");
   const { data: products, isLoading } = useVendorProducts(sellerName);
 

@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
-import { Link, useLocation } from "wouter";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useProduct } from "@/hooks/use-products";
 import { Product } from "@shared/schema";
 import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/button";
@@ -21,8 +22,6 @@ import { addToCart } from "@/store/cartSlice";
 import { toggleWishlist } from "@/store/wishlistSlice";
 import { useToast } from "@/hooks/use-toast";
 
-import { useRoute } from "wouter";
-import { useProduct } from "@/hooks/use-products";
 import { Loader2 } from "lucide-react";
 import { MOCK_PRODUCTS } from "@/data/products";
 import { ProductCard } from "@/components/product/ProductCard";
@@ -56,8 +55,7 @@ export const ProductDetailCard: React.FC<ProductDetailCardProps> = ({
   params: routeParams,
   relatedProducts: externalRelated,
 }) => {
-  const [, wouterParams] = useRoute("/product/:id");
-  const params = routeParams || wouterParams;
+  const params = useParams();
   const productId = parseInt(params?.id || "0", 10);
 
   // Only fetch if a product wasn't passed as a prop
@@ -70,7 +68,7 @@ export const ProductDetailCard: React.FC<ProductDetailCardProps> = ({
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const dispatch = useAppDispatch();
   const { toast } = useToast();
-  const [, navigate] = useLocation();
+  const navigate = useNavigate();
 
   // ── Related Products (Smart Filtering) ──────────────────────────────────
   const relatedProducts = useMemo<Product[]>(() => {
@@ -96,7 +94,7 @@ export const ProductDetailCard: React.FC<ProductDetailCardProps> = ({
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-white px-4 text-center">
         <h1 className="text-xl font-light tracking-[0.3em] uppercase mb-8">Product Not Found</h1>
-        <Link href="/shop" className="text-[10px] uppercase tracking-[0.2em] border-b border-neutral-900 pb-1">
+        <Link to="/products" className="text-[10px] uppercase tracking-[0.2em] border-b border-neutral-900 pb-1">
           Back to Shop
         </Link>
       </div>
@@ -150,22 +148,22 @@ export const ProductDetailCard: React.FC<ProductDetailCardProps> = ({
       <Container>
         {/* ── Breadcrumbs ─────────────────────────────────────────────── */}
         <nav className="flex items-center gap-4 text-[10px] tracking-[0.2em] uppercase text-neutral-400 mb-16">
-          <Link href="/" className="hover:text-neutral-900 transition-colors">Home</Link>
+          <Link to="/" className="hover:text-neutral-900 transition-colors">Home</Link>
           <ChevronRight size={10} />
-          <Link href="/shop" className="hover:text-neutral-900 transition-colors">Shop</Link>
+          <Link to="/products" className="hover:text-neutral-900 transition-colors">Shop</Link>
           <ChevronRight size={10} />
           <span className="text-neutral-900 truncate max-w-[200px]">{product.title}</span>
         </nav>
 
         {/* ── Product Detail ───────────────────────────────────────────── */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 xl:gap-24">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 max-w-6xl mx-auto">
           {/* Product Image */}
-          <div className="lg:col-span-7">
+          <div className="lg:col-span-5 lg:col-start-2">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="aspect-[4/5] bg-neutral-50 overflow-hidden relative group"
+              className="aspect-[4/5] bg-neutral-50 overflow-hidden relative group rounded-sm"
             >
               <img
                 src={product.image}
@@ -174,16 +172,16 @@ export const ProductDetailCard: React.FC<ProductDetailCardProps> = ({
               />
               <button
                 onClick={() => dispatch(toggleWishlist(product))}
-                className="absolute top-6 right-6 p-4 bg-white/90 backdrop-blur-md rounded-full shadow-sm hover:bg-white transition-all duration-300 z-10"
+                className="absolute top-4 right-4 p-3 bg-white/90 backdrop-blur-md rounded-full shadow-sm hover:bg-white transition-all duration-300 z-10"
               >
-                <Heart size={20} className={isWishlisted ? "fill-red-500 text-red-500" : "text-neutral-900"} strokeWidth={1.5} />
+                <Heart size={16} className={isWishlisted ? "fill-red-500 text-red-500" : "text-neutral-900"} strokeWidth={1.5} />
               </button>
             </motion.div>
 
             {/* Gallery strip */}
-            <div className="grid grid-cols-4 gap-4 mt-4">
+            <div className="grid grid-cols-4 gap-3 mt-3">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="aspect-[4/5] bg-neutral-50 overflow-hidden cursor-pointer">
+                <div key={i} className="aspect-[4/5] bg-neutral-50 overflow-hidden cursor-pointer rounded-sm">
                   <img src={product.image} alt="" className="w-full h-full object-cover opacity-60 hover:opacity-100 transition-opacity" />
                 </div>
               ))}
@@ -191,30 +189,30 @@ export const ProductDetailCard: React.FC<ProductDetailCardProps> = ({
           </div>
 
           {/* Product Info */}
-          <div className="lg:col-span-5 space-y-12">
+          <div className="lg:col-span-5 space-y-8 pt-4">
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2, duration: 0.8 }}
-              className="space-y-6"
+              className="space-y-4"
             >
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <div className="flex items-center gap-3">
-                  <span className="text-[10px] tracking-[0.4em] uppercase font-bold text-neutral-900 border-b border-black pb-0.5">
+                  <span className="text-[9px] tracking-[0.4em] uppercase font-bold text-neutral-900 border-b border-black pb-0.5">
                     {product.category}
                   </span>
                   <div className="flex items-center gap-1.5 px-2 py-0.5 bg-neutral-100 border border-neutral-200 rounded-full">
-                    <Star size={10} className="fill-black text-black" />
-                    <span className="text-[10px] font-bold text-black">{product.rating}</span>
+                    <Star size={8} className="fill-black text-black" />
+                    <span className="text-[9px] font-bold text-black">{product.rating}</span>
                   </div>
                 </div>
-                <h1 className="text-4xl md:text-5xl font-display font-light tracking-tight text-neutral-900">
+                <h1 className="text-3xl md:text-4xl font-display font-light tracking-tight text-neutral-900">
                   {product.title}
                 </h1>
-                <p className="text-neutral-400 text-[10px] tracking-[0.2em] uppercase font-medium">Vendor: {product.vendor}</p>
+                <p className="text-neutral-400 text-[9px] tracking-[0.2em] uppercase font-medium">Vendor: {product.vendor}</p>
               </div>
 
-              <div className="text-3xl font-light text-neutral-900">
+              <div className="text-2xl font-light text-neutral-900 pt-2">
                 ${parseFloat(product.price).toFixed(2)}
               </div>
             </motion.div>
@@ -223,25 +221,25 @@ export const ProductDetailCard: React.FC<ProductDetailCardProps> = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.8 }}
-              className="space-y-10"
+              className="space-y-8"
             >
-              <p className="text-sm text-neutral-500 font-light leading-relaxed">
+              <p className="text-[13px] text-neutral-500 font-light leading-relaxed">
                 {product.description || "A meticulously crafted piece that combines timeless aesthetic with modern functionality. Designed for longevity and style, this item serves as a perfect addition to your curated collection."}
               </p>
 
               {/* Interaction Block */}
-              <div className="space-y-8 bg-neutral-50 p-8 rounded-2xl border border-neutral-100">
+              <div className="space-y-6 bg-neutral-50 p-6 rounded-2xl border border-neutral-100">
                 {/* Size Selector */}
-                <div className="space-y-4">
+                <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <label className="text-[10px] tracking-[0.2em] uppercase font-bold text-neutral-900">Size</label>
+                    <label className="text-[9px] tracking-[0.2em] uppercase font-bold text-neutral-900">Size</label>
                   </div>
                   <div className="flex gap-2">
                     {SIZES.map((size) => (
                       <button
                         key={size}
                         onClick={() => setSelectedSize(size)}
-                        className={`w-10 h-10 text-[10px] border transition-all ${selectedSize === size ? "bg-neutral-900 text-white border-neutral-900" : "bg-white text-neutral-400 border-neutral-100 hover:border-neutral-900"}`}
+                        className={`w-8 h-8 flex items-center justify-center text-[9px] border transition-all rounded-sm ${selectedSize === size ? "bg-neutral-900 text-white border-neutral-900" : "bg-white text-neutral-400 border-neutral-200 hover:border-neutral-900"}`}
                       >
                         {size}
                       </button>
@@ -249,46 +247,46 @@ export const ProductDetailCard: React.FC<ProductDetailCardProps> = ({
                   </div>
                 </div>
 
-                <div className="space-y-4">
-                  <label className="text-[10px] tracking-[0.2em] uppercase font-bold text-neutral-900">Quantity</label>
-                  <div className="flex items-center justify-between bg-white px-6 py-3 rounded-lg border border-neutral-100 w-full sm:w-40">
+                <div className="space-y-3">
+                  <label className="text-[9px] tracking-[0.2em] uppercase font-bold text-neutral-900">Quantity</label>
+                  <div className="flex items-center justify-between bg-white px-4 py-2 rounded-lg border border-neutral-100 w-full sm:w-32">
                     <button
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
                       className="text-neutral-400 hover:text-neutral-900 transition-colors p-1"
                     >
-                      <Minus size={16} strokeWidth={1.5} />
+                      <Minus size={14} strokeWidth={1.5} />
                     </button>
-                    <span className="text-sm font-medium">{quantity}</span>
+                    <span className="text-xs font-medium">{quantity}</span>
                     <button
                       onClick={() => setQuantity(quantity + 1)}
                       className="text-neutral-400 hover:text-neutral-900 transition-colors p-1"
                     >
-                      <Plus size={16} strokeWidth={1.5} />
+                      <Plus size={14} strokeWidth={1.5} />
                     </button>
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-3 pt-2">
                   <Button
                     variant="premium"
-                    size="premium-lg"
+                    size="default"
                     onClick={handleAddToCart}
-                    className="w-full py-8 text-[11px] tracking-[0.3em] uppercase font-bold shadow-xl overflow-hidden"
+                    className="w-full py-4 text-[10px] tracking-[0.3em] uppercase font-bold shadow-md hover:shadow-lg transition-all"
                   >
-                    <ShoppingBag className="mr-3 h-4 w-4" />
+                    <ShoppingBag className="mr-2 h-3.5 w-3.5" />
                     ADD TO BAG
                   </Button>
 
-                  <div className="flex gap-4">
+                  <div className="flex gap-2 pt-1">
                     <button
                       onClick={() => dispatch(toggleWishlist(product))}
-                      className="flex-1 bg-white border border-neutral-100 py-4 rounded-xl flex items-center justify-center gap-3 text-[9px] tracking-[0.2em] uppercase hover:bg-neutral-50 transition-all font-bold text-neutral-900 shadow-sm"
+                      className="flex-1 bg-white border border-neutral-200 py-3 rounded-md flex items-center justify-center gap-2 text-[9px] tracking-[0.2em] uppercase hover:bg-neutral-50 hover:border-neutral-300 transition-all font-bold text-neutral-900 shadow-sm"
                     >
-                      <Heart size={14} strokeWidth={1.5} className={isWishlisted ? "fill-red-500 text-red-500" : ""} />
+                      <Heart size={12} strokeWidth={1.5} className={isWishlisted ? "fill-red-500 text-red-500" : ""} />
                       {isWishlisted ? "In Wishlist" : "Wishlist"}
                     </button>
-                    <button className="p-4 bg-white border border-neutral-100 rounded-xl hover:bg-neutral-50 transition-all shadow-sm">
-                      <Share2 size={14} strokeWidth={1.5} className="text-neutral-900" />
+                    <button className="p-3 px-4 bg-white border border-neutral-200 rounded-md hover:bg-neutral-50 hover:border-neutral-300 transition-all shadow-sm flex items-center justify-center">
+                      <Share2 size={12} strokeWidth={1.5} className="text-neutral-900" />
                     </button>
                   </div>
                 </div>
@@ -381,7 +379,7 @@ export const ProductDetailCard: React.FC<ProductDetailCardProps> = ({
 
             {/* Related Products Grid */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-              {relatedProducts.map((related, index) => (
+              {relatedProducts.map((related: Product, index: number) => (
                 <motion.div
                   key={related.id}
                   initial={{ opacity: 0, y: 24 }}
@@ -396,7 +394,7 @@ export const ProductDetailCard: React.FC<ProductDetailCardProps> = ({
             {/* CTA — view entire category */}
             <div className="flex justify-center mt-16">
               <Link
-                href={`/shop?category=${encodeURIComponent(product.category)}`}
+                to={`/products?category=${encodeURIComponent(product.category)}`}
                 className="group flex items-center gap-3 text-[10px] uppercase tracking-[0.4em] font-bold text-neutral-900 border-b border-neutral-900 pb-1 hover:gap-5 transition-all duration-300"
               >
                 View All {product.category}

@@ -10,8 +10,9 @@ export const MOCK_PRODUCTS: Product[] = [
     category: "Dresses",
     image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=1000&auto=format&fit=crop",
     description: "A timeless silk midi dress with a delicate sheen.",
-    isNew: false,
-    isFeatured: true
+    isNew: true,
+    isFeatured: true,
+    createdAt: "2024-03-15T10:00:00Z"
   },
   {
     id: 2,
@@ -23,7 +24,8 @@ export const MOCK_PRODUCTS: Product[] = [
     image: "https://images.unsplash.com/photo-1574201635302-388dd92a4c3f?q=80&w=1000&auto=format&fit=crop",
     description: "Ultra-soft cashmere sweater for effortless layers.",
     isNew: false,
-    isFeatured: false
+    isFeatured: false,
+    createdAt: "2024-03-10T11:00:00Z"
   },
   {
     id: 3,
@@ -34,8 +36,9 @@ export const MOCK_PRODUCTS: Product[] = [
     category: "Outerwear",
     image: "https://images.unsplash.com/photo-1548126032-079a0fb0099d?q=80&w=1000&auto=format&fit=crop",
     description: "Sharp tailoring meets premium Italian wool.",
-    isNew: false,
-    isFeatured: true
+    isNew: true,
+    isFeatured: true,
+    createdAt: "2024-03-18T10:00:00Z"
   },
   {
     id: 4,
@@ -47,7 +50,8 @@ export const MOCK_PRODUCTS: Product[] = [
     image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?q=80&w=1000&auto=format&fit=crop",
     description: "Handcrafted leather bag with minimal hardware.",
     isNew: false,
-    isFeatured: false
+    isFeatured: false,
+    createdAt: "2024-03-01T12:00:00Z"
   },
   {
     id: 5,
@@ -59,7 +63,8 @@ export const MOCK_PRODUCTS: Product[] = [
     image: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?q=80&w=1000&auto=format&fit=crop",
     description: "Flowing silhouette in a breathable linen blend.",
     isNew: false,
-    isFeatured: false
+    isFeatured: false,
+    createdAt: "2024-02-15T09:00:00Z"
   },
   {
     id: 6,
@@ -70,8 +75,9 @@ export const MOCK_PRODUCTS: Product[] = [
     category: "Accessories",
     image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?q=80&w=1000&auto=format&fit=crop",
     description: "The perfect everyday companion in pebbled leather.",
-    isNew: false,
-    isFeatured: true
+    isNew: true,
+    isFeatured: true,
+    createdAt: "2024-03-20T09:00:00Z"
   },
   {
     id: 7,

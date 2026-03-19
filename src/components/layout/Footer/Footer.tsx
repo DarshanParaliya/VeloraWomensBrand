@@ -1,6 +1,6 @@
 import React from "react";
-import { Link } from "wouter";
-import { Instagram, Twitter, Music2 as Pinterest, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Instagram, Music2, Share2 as Pinterest, ArrowRight, Twitter } from "lucide-react";
 import { Container } from "../Container";
 import { FOOTER_SECTIONS, SOCIAL_LINKS, COPYRIGHT_TEXT } from "./constants";
 import { FooterSection, FooterLink } from "./types";
@@ -12,11 +12,27 @@ export const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-8 mb-20">
           {/* Brand Info */}
           <div className="lg:col-span-2 pr-12">
-            <h2 className="text-2xl font-light tracking-[0.3em] mb-8">VELORA</h2>
-            <p className="text-neutral-500 font-light leading-relaxed mb-8 max-w-sm">
+            <h2 className="text-2xl font-light tracking-[0.3em] mb-8 uppercase">VELORA</h2>
+            <p className="text-neutral-500 font-light leading-relaxed mb-10 max-w-sm">
               Elevating the everyday through a curated collection of minimalist essentials. 
               Designed for the modern woman who values quality and timeless elegance.
             </p>
+            
+            {/* Newsletter */}
+            <div className="mb-10 max-w-xs">
+              <h4 className="text-[10px] font-bold tracking-[0.3em] uppercase mb-4">Newsletter</h4>
+              <div className="flex border-b border-neutral-200 focus-within:border-black transition-colors py-2">
+                <input 
+                  type="email" 
+                  placeholder="Join our mailing list" 
+                  className="bg-transparent text-sm font-light w-full outline-none placeholder:text-neutral-300"
+                />
+                <button className="text-neutral-400 hover:text-black transition-colors px-2">
+                  <ArrowRight size={16} strokeWidth={1.5} />
+                </button>
+              </div>
+            </div>
+
             <div className="flex space-x-6">
               {SOCIAL_LINKS.map((social) => (
                 <a 
@@ -42,7 +58,7 @@ export const Footer: React.FC = () => {
                 {section.links.map((link: FooterLink) => (
                   <li key={link.label}>
                     <Link 
-                      href={link.href} 
+                      to={link.href} 
                       className="text-sm text-neutral-500 hover:text-black transition-colors font-light"
                     >
                       {link.label}

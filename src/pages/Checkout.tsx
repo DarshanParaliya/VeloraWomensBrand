@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { useAppSelector, useAppDispatch } from "@/hooks/use-redux";
 import { clearCart } from "@/store/cartSlice";
 import { useToast } from "@/hooks/use-toast";
-import { Link, useLocation } from "wouter";
+import { Link, useNavigate } from "react-router-dom";
 import { ShieldCheck, CreditCard, CheckCircle } from "lucide-react";
 import { useState } from "react";
 
@@ -15,14 +15,14 @@ export default function Checkout() {
   const [isSuccess, setIsSuccess] = useState(false);
   const dispatch = useAppDispatch();
   const { toast } = useToast();
-  const [, setLocation] = useLocation();
+  const navigate = useNavigate();
 
   const shipping = 10.00;
   const tax = totalPrice * 0.08; // 8% mockup tax
   const finalTotal = totalPrice + shipping + tax;
 
   if (items.length === 0 && !isSuccess) {
-    setLocation("/cart");
+    navigate("/cart");
     return null;
   }
 
@@ -52,7 +52,7 @@ export default function Checkout() {
         <p className="text-lg text-muted-foreground mb-10 max-w-lg">
           Your order has been confirmed and will be shipped shortly. 
         </p>
-        <Link href="/">
+        <Link to="/">
           <Button size="lg" className="rounded-full px-10 h-14">
             Continue Shopping
           </Button>

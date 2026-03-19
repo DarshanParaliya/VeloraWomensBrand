@@ -1,7 +1,7 @@
 import React from "react";
 import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/button";
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 import { HeroBanner } from "./HeroBanner/HeroBanner";
 import { FeaturedSection } from "./FeaturedSection/FeaturedSection";
 import { FeaturedPieces } from "./FeaturedPieces/FeaturedPieces";
@@ -28,20 +28,24 @@ const Home: React.FC = () => {
             <p className="text-2xl font-light tracking-widest uppercase">Shop by Category</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {CATEGORIES.map((cat: CategoryItem) => (
-              <div key={cat.name} className="group cursor-pointer">
-                <div className="aspect-[3/4] overflow-hidden mb-6 bg-neutral-100">
-                  <img
-                    src={cat.img}
-                    alt={cat.name}
-                    className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
-                  />
-                </div>
-                <h3 className="text-sm font-medium tracking-[0.2em] uppercase text-center group-hover:text-neutral-500 transition-colors">
-                  {cat.name}
-                </h3>
-              </div>
-            ))}
+             {CATEGORIES.map((cat: CategoryItem) => (
+               <Link 
+                 key={cat.name} 
+                 to={`/products?category=${encodeURIComponent(cat.name)}`}
+                 className="group cursor-pointer"
+               >
+                 <div className="aspect-[3/4] overflow-hidden mb-6 bg-neutral-100">
+                   <img
+                     src={cat.img}
+                     alt={cat.name}
+                     className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
+                   />
+                 </div>
+                 <h3 className="text-sm font-medium tracking-[0.2em] uppercase text-center group-hover:text-neutral-500 transition-colors">
+                   {cat.name}
+                 </h3>
+               </Link>
+             ))}
           </div>
         </Container>
       </section>
@@ -68,12 +72,14 @@ const Home: React.FC = () => {
               <p className="text-neutral-500 leading-relaxed font-light text-lg">
                 {SELLER_PROMO.description}
               </p>
-              <Button
-                variant="outline"
-                className="rounded-none px-10 py-6 border-neutral-900 uppercase tracking-[0.3em] text-[10px] hover:bg-neutral-900 hover:text-white transition-all duration-500"
-              >
-                {SELLER_PROMO.cta}
-              </Button>
+               <Link to="/products">
+                <Button
+                  variant="outline"
+                  className="rounded-none px-10 py-6 border-neutral-900 uppercase tracking-[0.3em] text-[10px] hover:bg-neutral-900 hover:text-white transition-all duration-500"
+                >
+                  {SELLER_PROMO.cta}
+                </Button>
+              </Link>
             </div>
           </div>
         </Container>

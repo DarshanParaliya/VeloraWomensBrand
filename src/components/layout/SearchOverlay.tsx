@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Search, X, ArrowRight } from "lucide-react";
 import { Product } from "@shared/schema";
 import { useProducts } from "@/hooks/use-products";
-import { useLocation } from "wouter";
+import { useNavigate } from "react-router-dom";
 
 interface SearchOverlayProps {
   isOpen: boolean;
@@ -24,7 +24,7 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose })
   const [showInlineResults, setShowInlineResults] = useState(false);
   const { data: products = [] } = useProducts();
   const inputRef = useRef<HTMLInputElement>(null);
-  const [, navigate] = useLocation();
+  const navigate = useNavigate();
 
   // ── Navigation helpers ─────────────────────────────────────────────────────
 
@@ -59,22 +59,22 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose })
       (p) => p.category.toLowerCase() === t.toLowerCase(),
     );
     if (categoryMatch) {
-      navigate(`/shop?category=${encodeURIComponent(categoryMatch.category)}`);
+      navigate(`/products?category=${encodeURIComponent(categoryMatch.category)}`);
       onClose();
       return;
     }
 
     // 3. Generic search → shop with query param
-    navigate(`/shop?query=${encodeURIComponent(t)}`);
+    navigate(`/products?query=${encodeURIComponent(t)}`);
     onClose();
   };
 
   /**
    * Dedicated handler for the static "Categories" suggestions.
-   * Always redirects to /shop?category=… (shop all filtered by category).
+   * Always redirects to /products?category=… (shop all filtered by category).
    */
   const navigateToCategory = (category: string) => {
-    navigate(`/shop?category=${encodeURIComponent(category)}`);
+    navigate(`/products?category=${encodeURIComponent(category)}`);
     onClose();
   };
 

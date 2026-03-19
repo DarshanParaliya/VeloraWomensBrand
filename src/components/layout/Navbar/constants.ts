@@ -1,8 +1,8 @@
 import { NavItem } from './types';
 
 export const NAV_LINKS: NavItem[] = [
-  { label: 'Shop All', href: '/shop' },
-  { label: 'New Arrivals', href: '/new' },
+  { label: 'Shop All', href: '/products' },
+  { label: 'New Arrivals', href: '/products?filter=new' },
   { label: 'Collections', href: '/collections' },
   { label: 'Journal', href: '/journal' },
 ];

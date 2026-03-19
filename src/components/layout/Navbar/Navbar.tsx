@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 import { ShoppingCart, Heart, Search, Menu, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Container } from "../Container";
@@ -35,7 +35,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearchClick }) => {
             {NAV_LINKS.map((link: NavItem) => (
               <Link
                 key={link.label}
-                href={link.href}
+                to={link.href}
                 className="text-sm font-medium tracking-widest uppercase hover:text-neutral-500 transition-colors"
               >
                 {link.label}
@@ -44,7 +44,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearchClick }) => {
           </div>
 
           {/* Logo */}
-          <Link href="/" className="absolute left-1/2 -translate-x-1/2">
+          <Link to="/" className="absolute left-1/2 -translate-x-1/2">
             <h1 className="text-2xl md:text-3xl font-light tracking-[0.3em] cursor-pointer">
               {BRAND_NAME}
             </h1>
