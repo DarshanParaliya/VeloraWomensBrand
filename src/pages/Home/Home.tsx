@@ -72,7 +72,7 @@ const Home: React.FC = () => {
               <p className="text-neutral-500 leading-relaxed font-light text-lg">
                 {SELLER_PROMO.description}
               </p>
-               <Link to="/products">
+               <Link to="/about">
                 <Button
                   variant="outline"
                   className="rounded-none px-10 py-6 border-neutral-900 uppercase tracking-[0.3em] text-[10px] hover:bg-neutral-900 hover:text-white transition-all duration-500"

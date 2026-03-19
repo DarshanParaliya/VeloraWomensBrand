@@ -13,6 +13,8 @@ import Cart from "@/pages/Cart";
 import Checkout from "@/pages/Checkout";
 import SellerStore from "@/pages/SellerStore/SellerStore";
 import ProductList from "@/pages/ProductList/ProductList";
+import About from "@/pages/About/About";
+import Contact from "@/pages/Contact/Contact";
 
 import { Navbar } from "@/components/layout/Navbar/Navbar";
 import { Footer } from "@/components/layout/Footer/Footer";
@@ -35,6 +37,8 @@ function Router() {
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/seller/:name" element={<SellerStore />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
             <Route path="/shop" element={<Navigate to="/products" replace />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
