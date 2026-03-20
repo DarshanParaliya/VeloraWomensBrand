@@ -10,15 +10,17 @@ import {
   Plus,
   Heart,
   Share2,
+  ChevronLeft,
   ChevronRight,
   ShieldCheck,
   RotateCcw,
   Star,
   ShoppingBag,
   ArrowRight,
+  X,
 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/hooks/use-redux";
-import { addToCart } from "@/store/cartSlice";
+import { addItem } from "@/store/cartSlice";
 import { toggleWishlist } from "@/store/wishlistSlice";
 import { useToast } from "@/hooks/use-toast";
 
@@ -63,12 +65,45 @@ export const ProductDetailCard: React.FC<ProductDetailCardProps> = ({
 
   const product = initialProduct || (fetchedProduct as Product | undefined);
 
+  // ── Smart Selection Logic ───────────────────────────────────────────────
+  const nonSizeCategories = useMemo(() => ["Accessories", "Home Decor", "Furniture", "Electronics", "Textiles", "Art", "Beauty", "Parlour"], []);
+  const isSizeBased = useMemo(() => product && !nonSizeCategories.includes(product.category), [product, nonSizeCategories]);
+
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("Description");
-  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  // Default to 'S' for size-based, null otherwise
+  const [selectedSize, setSelectedSize] = useState<string | null>(isSizeBased ? "S" : null);
+  const [isImageOpen, setIsImageOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  
   const dispatch = useAppDispatch();
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  // Simulated gallery for mock products
+  const productGallery = useMemo(() => [
+    product?.image,
+    product?.image,
+    product?.image,
+    product?.image
+  ].filter(Boolean) as string[], [product]);
+
+  const handleNextImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentImageIndex((prev) => (prev + 1) % productGallery.length);
+  };
+
+  const handlePrevImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentImageIndex((prev) => (prev - 1 + productGallery.length) % productGallery.length);
+  };
+
+  // Update selected size when product changes
+  React.useEffect(() => {
+    if (product) {
+      setSelectedSize(!nonSizeCategories.includes(product.category) ? "S" : null);
+    }
+  }, [product, nonSizeCategories]);
 
   // ── Related Products (Smart Filtering) ──────────────────────────────────
   const relatedProducts = useMemo<Product[]>(() => {
@@ -111,7 +146,7 @@ export const ProductDetailCard: React.FC<ProductDetailCardProps> = ({
 
   // ── Handlers ────────────────────────────────────────────────────────────
   const handleAddToCart = () => {
-    if (!selectedSize) {
+    if (isSizeBased && !selectedSize) {
       toast({
         title: "Please select a size",
         description: "You must select a size before adding to the bag.",
@@ -119,15 +154,23 @@ export const ProductDetailCard: React.FC<ProductDetailCardProps> = ({
       });
       return;
     }
-    dispatch(addToCart({ product, quantity }));
+    
+    const payload = { 
+      product, 
+      quantity,
+      ...(isSizeBased && selectedSize ? { size: selectedSize } : {})
+    };
+    
+    dispatch(addItem(payload));
+    
     toast({
       title: "Added to Bag",
-      description: `${product.title} (Size: ${selectedSize}) has been added to your bag.`,
+      description: `${product.title}${isSizeBased && selectedSize ? ` (Size: ${selectedSize})` : ""} has been added to your bag.`,
     });
   };
 
   const handleBuyNow = () => {
-    if (!selectedSize) {
+    if (isSizeBased && !selectedSize) {
       toast({
         title: "Please select a size",
         description: "You must select a size before checking out.",
@@ -135,11 +178,15 @@ export const ProductDetailCard: React.FC<ProductDetailCardProps> = ({
       });
       return;
     }
-    dispatch(addToCart({ product, quantity }));
-    toast({
-      title: "Proceeding to Checkout",
-      description: `Redirecting you to complete your purchase of ${product.title}.`,
-    });
+    
+    const payload = { 
+      product, 
+      quantity,
+      ...(isSizeBased && selectedSize ? { size: selectedSize } : {})
+    };
+    
+    dispatch(addItem(payload));
+    navigate("/checkout");
   };
 
   // ── Render ───────────────────────────────────────────────────────────────
@@ -163,7 +210,8 @@ export const ProductDetailCard: React.FC<ProductDetailCardProps> = ({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="aspect-[4/5] bg-neutral-50 overflow-hidden relative group rounded-sm"
+              className="aspect-[4/5] bg-neutral-50 overflow-hidden relative group rounded-sm cursor-zoom-in"
+              onClick={() => setIsImageOpen(true)}
             >
               <img
                 src={product.image}
@@ -171,18 +219,83 @@ export const ProductDetailCard: React.FC<ProductDetailCardProps> = ({
                 className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
               />
               <button
-                onClick={() => dispatch(toggleWishlist(product))}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  dispatch(toggleWishlist(product));
+                }}
                 className="absolute top-4 right-4 p-3 bg-white/90 backdrop-blur-md rounded-full shadow-sm hover:bg-white transition-all duration-300 z-10"
               >
                 <Heart size={16} className={isWishlisted ? "fill-red-500 text-red-500" : "text-neutral-900"} strokeWidth={1.5} />
               </button>
             </motion.div>
 
+            {/* Quick View — Image Modal */}
+            <AnimatePresence>
+              {isImageOpen && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-sm p-4 md:p-12 cursor-zoom-out"
+                  onClick={() => setIsImageOpen(false)}
+                >
+                  <motion.button
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="absolute top-8 right-8 text-white/50 hover:text-white transition-colors"
+                  >
+                    <X size={32} strokeWidth={1} />
+                  </motion.button>
+                  
+                  <motion.img
+                    key={currentImageIndex}
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.9, opacity: 0 }}
+                    src={productGallery[currentImageIndex]}
+                    alt={product.title}
+                    className="max-w-full max-h-full object-contain shadow-2xl"
+                    onClick={(e) => e.stopPropagation()}
+                  />
+
+                  {productGallery.length > 1 && (
+                    <>
+                      <button
+                        onClick={handlePrevImage}
+                        className="absolute left-4 md:left-8 p-4 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full text-white/70 hover:text-white transition-all transform hover:-translate-x-1"
+                      >
+                        <ChevronLeft size={24} strokeWidth={1} />
+                      </button>
+                      <button
+                        onClick={handleNextImage}
+                        className="absolute right-4 md:right-8 p-4 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full text-white/70 hover:text-white transition-all transform hover:translate-x-1"
+                      >
+                        <ChevronRight size={24} strokeWidth={1} />
+                      </button>
+
+                      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-4 bg-black/40 px-6 py-3 rounded-full backdrop-blur-lg border border-white/10">
+                        {productGallery.map((_, idx) => (
+                          <div
+                            key={idx}
+                            className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${idx === currentImageIndex ? "bg-white scale-125 w-4" : "bg-white/30"}`}
+                          />
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             {/* Gallery strip */}
             <div className="grid grid-cols-4 gap-3 mt-3">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="aspect-[4/5] bg-neutral-50 overflow-hidden cursor-pointer rounded-sm">
-                  <img src={product.image} alt="" className="w-full h-full object-cover opacity-60 hover:opacity-100 transition-opacity" />
+              {productGallery.map((img, idx) => (
+                <div 
+                  key={idx} 
+                  className={`aspect-[4/5] bg-neutral-50 overflow-hidden cursor-pointer rounded-sm border-2 transition-all ${idx === currentImageIndex ? "border-neutral-900 shadow-md" : "border-transparent opacity-60 hover:opacity-100"}`}
+                  onClick={() => setCurrentImageIndex(idx)}
+                >
+                  <img src={img} alt={`${product.title} view ${idx + 1}`} className="w-full h-full object-cover" />
                 </div>
               ))}
             </div>
@@ -230,22 +343,24 @@ export const ProductDetailCard: React.FC<ProductDetailCardProps> = ({
               {/* Interaction Block */}
               <div className="space-y-6 bg-neutral-50 p-6 rounded-2xl border border-neutral-100">
                 {/* Size Selector */}
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <label className="text-[9px] tracking-[0.2em] uppercase font-bold text-neutral-900">Size</label>
+                {isSizeBased && (
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <label className="text-[9px] tracking-[0.2em] uppercase font-bold text-neutral-900">Size</label>
+                    </div>
+                    <div className="flex gap-2">
+                      {SIZES.map((size) => (
+                        <button
+                          key={size}
+                          onClick={() => setSelectedSize(size)}
+                          className={`w-8 h-8 flex items-center justify-center text-[9px] border transition-all rounded-sm ${selectedSize === size ? "bg-neutral-900 text-white border-neutral-900" : "bg-white text-neutral-400 border-neutral-200 hover:border-neutral-900"}`}
+                        >
+                          {size}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                  <div className="flex gap-2">
-                    {SIZES.map((size) => (
-                      <button
-                        key={size}
-                        onClick={() => setSelectedSize(size)}
-                        className={`w-8 h-8 flex items-center justify-center text-[9px] border transition-all rounded-sm ${selectedSize === size ? "bg-neutral-900 text-white border-neutral-900" : "bg-white text-neutral-400 border-neutral-200 hover:border-neutral-900"}`}
-                      >
-                        {size}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                )}
 
                 <div className="space-y-3">
                   <label className="text-[9px] tracking-[0.2em] uppercase font-bold text-neutral-900">Quantity</label>
@@ -271,7 +386,7 @@ export const ProductDetailCard: React.FC<ProductDetailCardProps> = ({
                     variant="premium"
                     size="default"
                     onClick={handleAddToCart}
-                    className="w-full py-4 text-[10px] tracking-[0.3em] uppercase font-bold shadow-md hover:shadow-lg transition-all"
+                    className="w-full py-4 text-[10px] tracking-[0.3em] uppercase font-bold shadow-md hover:shadow-lg transition-all bg-gradient-to-tr from-neutral-900 to-neutral-700 hover:from-neutral-800 hover:to-neutral-600 border-none"
                   >
                     <ShoppingBag className="mr-2 h-3.5 w-3.5" />
                     ADD TO BAG

@@ -5,7 +5,18 @@ interface WishlistState {
   items: Product[];
 }
 
-const initialState: WishlistState = {
+// Helper to load from localStorage for initial state
+const loadFromStorage = (): WishlistState | undefined => {
+  try {
+    const serializedState = localStorage.getItem("velora_wishlist");
+    if (serializedState === null) return undefined;
+    return JSON.parse(serializedState);
+  } catch (err) {
+    return undefined;
+  }
+};
+
+const initialState: WishlistState = loadFromStorage() || {
   items: [],
 };
 

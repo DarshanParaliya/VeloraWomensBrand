@@ -18,6 +18,10 @@ export interface ProductCardUIProps {
   className?: string;
   to?: string;
   LinkComponent?: React.ElementType;
+  // Size selection props
+  isSizeBased?: boolean;
+  selectedSize?: string | null;
+  onSizeSelect?: (size: string) => void;
 }
 
 export const ProductCardUI = React.forwardRef<HTMLDivElement, ProductCardUIProps>(
@@ -36,9 +40,14 @@ export const ProductCardUI = React.forwardRef<HTMLDivElement, ProductCardUIProps
       className,
       to,
       LinkComponent = "a",
+      isSizeBased = false,
+      selectedSize = null,
+      onSizeSelect,
     },
     ref
   ) => {
+    const SIZES = ["XS", "S", "M", "L", "XL"];
+
     return (
       <div
         ref={ref}
@@ -76,7 +85,28 @@ export const ProductCardUI = React.forwardRef<HTMLDivElement, ProductCardUIProps
           </button>
 
           {/* Quick Actions Overlay */}
-          <div className="absolute bottom-0 left-0 right-0 flex translate-y-full transform items-center justify-center p-6 transition-transform duration-500 group-hover:translate-y-0 bg-gradient-to-t from-black/20 to-transparent">
+          <div className="absolute bottom-0 left-0 right-0 flex translate-y-full transform flex-col items-center justify-center p-6 transition-transform duration-500 group-hover:translate-y-0 bg-gradient-to-t from-black/40 to-transparent gap-4">
+            {isSizeBased && (
+              <div className="flex gap-2 mb-2">
+                {SIZES.map((size) => (
+                  <button
+                    key={size}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onSizeSelect?.(size);
+                    }}
+                    className={cn(
+                      "w-8 h-8 flex items-center justify-center text-[10px] font-bold border rounded-sm transition-all shadow-sm",
+                      selectedSize === size
+                        ? "bg-white text-black border-white scale-110"
+                        : "bg-black/20 text-white border-white/30 hover:bg-black/40 hover:border-white/60"
+                    )}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+            )}
             <Button
               variant="premium"
               size="premium-lg"

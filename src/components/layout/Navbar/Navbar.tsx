@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 import { Container } from "../Container";
 import { BRAND_NAME, NAV_LINKS } from "./constants";
 import { NavItem } from "./types";
+import { useAppSelector } from "@/hooks/use-redux";
+import { useNavigate } from "react-router-dom";
 
 export interface NavbarProps {
   onSearchClick?: () => void;
@@ -12,6 +14,9 @@ export interface NavbarProps {
 
 export const Navbar: React.FC<NavbarProps> = ({ onSearchClick }) => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const { totalQuantity } = useAppSelector((state) => state.cart);
+  const { items: wishlistItems } = useAppSelector((state) => state.wishlist);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
@@ -61,11 +66,27 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearchClick }) => {
             <button className="hover:opacity-60 transition-opacity">
               <User size={20} strokeWidth={1.5} />
             </button>
-            <button className="relative hover:opacity-60 transition-opacity">
+            <button 
+              onClick={() => navigate("/wishlist")}
+              className="relative hover:opacity-60 transition-opacity"
+            >
               <Heart size={20} strokeWidth={1.5} />
+              {wishlistItems.length > 0 && (
+                <span className="absolute -top-1 -right-1 bg-neutral-900 text-white text-[8px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-lg animate-in zoom-in duration-300">
+                  {wishlistItems.length}
+                </span>
+              )}
             </button>
-            <button className="relative hover:opacity-60 transition-opacity">
+            <button 
+              onClick={() => navigate("/cart")}
+              className="relative hover:opacity-60 transition-opacity group"
+            >
               <ShoppingCart size={20} strokeWidth={1.5} />
+              {totalQuantity > 0 && (
+                <span className="absolute -top-1 -right-1 bg-gradient-to-tr from-cyan-500 to-emerald-400 text-white text-[8px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-lg animate-in zoom-in duration-300">
+                  {totalQuantity}
+                </span>
+              )}
             </button>
             <button className="md:hidden hover:opacity-60 transition-opacity">
               <Menu size={20} strokeWidth={1.5} />

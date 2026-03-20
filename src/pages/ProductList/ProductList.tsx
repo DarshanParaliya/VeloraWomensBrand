@@ -7,7 +7,7 @@ import { useProducts } from "@/hooks/use-products";
 import { PRODUCT_LIST_CONFIG } from "./constants";
 import { Filter, ChevronDown, X, ArrowRight, Star, ShoppingBag } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/hooks/use-redux";
-import { addToCart } from "@/store/cartSlice";
+import { addItem } from "@/store/cartSlice";
 import { toggleWishlist } from "@/store/wishlistSlice";
 import { useToast } from "@/hooks/use-toast";
 import { Product } from "@shared/schema";
@@ -368,7 +368,7 @@ const FeaturedHeroCard: React.FC<{ product: Product }> = ({ product }) => {
   );
 
   const handleAddToCart = () => {
-    dispatch(addToCart({ product }));
+    dispatch(addItem({ product }));
     toast({ title: "Added to Bag", description: `${product.title} added to your bag.` });
   };
 
@@ -431,7 +431,7 @@ const FeaturedHeroCard: React.FC<{ product: Product }> = ({ product }) => {
               {isWishlisted ? "Saved" : "Wishlist"}
             </button>
             <Link
-              href={`/product/${product.id}`}
+              to={`/product/${product.id}`}
               className="px-6 py-4 border border-neutral-300 text-[10px] uppercase tracking-[0.2em] font-bold text-[#121212] hover:border-[#121212] transition-colors flex items-center gap-2"
             >
               Full Details <ArrowRight size={12} />

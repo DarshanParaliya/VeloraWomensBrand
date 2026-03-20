@@ -4,23 +4,35 @@ import type { Product } from "@shared/schema";
 export interface CartItem {
   product: Product;
   quantity: number;
+  size?: string;
 }
 
 interface CartState {
-  items: CartItem[];
+  cartItems: CartItem[];
   totalQuantity: number;
-  totalPrice: number;
+  totalAmount: number;
 }
 
-const initialState: CartState = {
-  items: [],
+// Helper to load from localStorage for initial state
+const loadFromStorage = (): CartState | undefined => {
+  try {
+    const serializedState = localStorage.getItem("velora_cart");
+    if (serializedState === null) return undefined;
+    return JSON.parse(serializedState);
+  } catch (err) {
+    return undefined;
+  }
+};
+
+const initialState: CartState = loadFromStorage() || {
+  cartItems: [],
   totalQuantity: 0,
-  totalPrice: 0,
+  totalAmount: 0,
 };
 
 function calculateTotals(state: CartState) {
-  state.totalQuantity = state.items.reduce((sum, item) => sum + item.quantity, 0);
-  state.totalPrice = state.items.reduce(
+  state.totalQuantity = state.cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  state.totalAmount = state.cartItems.reduce(
     (sum, item) => sum + Number(item.product.price) * item.quantity,
     0
   );
@@ -30,28 +42,36 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    addToCart: (state, action: PayloadAction<{ product: Product; quantity?: number }>) => {
-      const { product, quantity = 1 } = action.payload;
-      const existingItem = state.items.find((item) => item.product.id === product.id);
+    addItem: (state, action: PayloadAction<{ product: Product; quantity?: number; size?: string }>) => {
+      const { product, quantity = 1, size } = action.payload;
+      const existingItem = state.cartItems.find(
+        (item) => item.product.id === product.id && item.size === size
+      );
       
       if (existingItem) {
         existingItem.quantity += quantity;
       } else {
-        state.items.push({ product, quantity });
+        state.cartItems.push({ product, quantity, size });
       }
       calculateTotals(state);
     },
-    removeFromCart: (state, action: PayloadAction<number>) => {
-      state.items = state.items.filter((item) => item.product.id !== action.payload);
+    removeItem: (state, action: PayloadAction<{ id: number; size?: string }>) => {
+      state.cartItems = state.cartItems.filter(
+        (item) => !(item.product.id === action.payload.id && item.size === action.payload.size)
+      );
       calculateTotals(state);
     },
-    updateQuantity: (state, action: PayloadAction<{ id: number; quantity: number }>) => {
-      const { id, quantity } = action.payload;
-      const existingItem = state.items.find((item) => item.product.id === id);
+    updateQuantity: (state, action: PayloadAction<{ id: number; quantity: number; size?: string }>) => {
+      const { id, quantity, size } = action.payload;
+      const existingItem = state.cartItems.find(
+        (item) => item.product.id === id && item.size === size
+      );
       
       if (existingItem) {
         if (quantity <= 0) {
-          state.items = state.items.filter((item) => item.product.id !== id);
+          state.cartItems = state.cartItems.filter(
+            (item) => !(item.product.id === id && item.size === size)
+          );
         } else {
           existingItem.quantity = quantity;
         }
@@ -59,12 +79,12 @@ const cartSlice = createSlice({
       }
     },
     clearCart: (state) => {
-      state.items = [];
+      state.cartItems = [];
       state.totalQuantity = 0;
-      state.totalPrice = 0;
+      state.totalAmount = 0;
     },
   },
 });
 
-export const { addToCart, removeFromCart, updateQuantity, clearCart } = cartSlice.actions;
+export const { addItem, removeItem, updateQuantity, clearCart } = cartSlice.actions;
 export default cartSlice.reducer;

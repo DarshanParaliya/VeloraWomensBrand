@@ -1,7 +1,8 @@
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Product } from "@shared/schema";
 import { useAppDispatch, useAppSelector } from "@/hooks/use-redux";
-import { addToCart } from "@/store/cartSlice";
+import { addItem } from "@/store/cartSlice";
 import { toggleWishlist } from "@/store/wishlistSlice";
 import { useToast } from "@/hooks/use-toast";
 import { ProductCardUI } from "@/components/ui/product_card_ui";
@@ -14,16 +15,29 @@ export function ProductCard({ product }: ProductCardProps) {
   const dispatch = useAppDispatch();
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  const nonSizeCategories = ["Accessories", "Home Decor", "Furniture", "Electronics", "Textiles", "Art", "Beauty", "Parlour"];
+  const isSizeBased = !nonSizeCategories.includes(product.category);
+
+  const [selectedSize, setSelectedSize] = React.useState<string | null>(isSizeBased ? "S" : null);
+
   const isWishlisted = useAppSelector((state) =>
     state.wishlist.items.some((item) => item.id === product.id)
   );
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
-    dispatch(addToCart({ product }));
+    
+    const payload = { 
+      product, 
+      ...(isSizeBased && selectedSize ? { size: selectedSize } : {})
+    };
+    
+    dispatch(addItem(payload));
+    
     toast({
       title: "Added to cart",
-      description: `${product.title} has been added to your cart.`,
+      description: `${product.title}${isSizeBased && selectedSize ? ` (Size: ${selectedSize})` : ""} has been added to your cart.`,
     });
   };
 
@@ -53,6 +67,9 @@ export function ProductCard({ product }: ProductCardProps) {
       onQuickView={handleQuickView}
       to={`/product/${product.id}`}
       LinkComponent={Link}
+      isSizeBased={isSizeBased}
+      selectedSize={selectedSize}
+      onSizeSelect={(size) => setSelectedSize(size)}
     />
   );
 }

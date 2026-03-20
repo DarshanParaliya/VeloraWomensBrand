@@ -2,7 +2,7 @@ import React from 'react';
 import { Container } from '@/components/layout/Container';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { FEATURED_COLLECTIONS } from './constants';
 import { FeaturedItem } from './types';
 
@@ -32,7 +32,7 @@ export const FeaturedSection: React.FC = () => {
 };
 
 const FeaturedCard: React.FC<{ item: FeaturedItem; isLarge: boolean }> = ({ item, isLarge }) => (
-  <Link href={item.link} className="relative block w-full h-full group">
+  <Link to={item.link} className="relative block w-full h-full group">
     <div className="relative w-full h-full">
       <img
         src={item.imageUrl}

@@ -15,6 +15,9 @@ import SellerStore from "@/pages/SellerStore/SellerStore";
 import ProductList from "@/pages/ProductList/ProductList";
 import About from "@/pages/About/About";
 import Contact from "@/pages/Contact/Contact";
+import { Wishlist } from "@/pages/Wishlist";
+import { Journal } from "@/pages/Journal/Journal";
+import { JournalDetail } from "@/pages/Journal/JournalDetail";
 
 import { Navbar } from "@/components/layout/Navbar/Navbar";
 import { Footer } from "@/components/layout/Footer/Footer";
@@ -39,6 +42,9 @@ function Router() {
             <Route path="/seller/:name" element={<SellerStore />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/journal" element={<Journal />} />
+            <Route path="/journal/:id" element={<JournalDetail />} />
             <Route path="/shop" element={<Navigate to="/products" replace />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
