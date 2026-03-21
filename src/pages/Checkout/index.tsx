@@ -9,7 +9,8 @@ import { CartSummary } from "./Cart/CartSummary";
 import { PaymentMethod } from "./PaymentForm/PaymentMethod";
 
 const Checkout: React.FC = () => {
-  const { cartItems, totalAmount } = useAppSelector((state) => state.cart);
+  const { cartItems: allCartItems, totalAmount } = useAppSelector((state) => state.cart);
+  const cartItems = allCartItems.filter(item => item.selected);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const dispatch = useAppDispatch();

@@ -1,13 +1,15 @@
 import React from "react";
 import { Container } from "@/components/layout/Container";
-import { useAppSelector } from "@/hooks/use-redux";
+import { useAppSelector, useAppDispatch } from "@/hooks/use-redux";
 import { Link } from "react-router-dom";
-import { Heart, ShoppingBag } from "lucide-react";
+import { Heart, ShoppingBag, X } from "lucide-react";
+import { clearWishlist } from "@/store/wishlistSlice";
 import { ProductCard } from "@/components/product/ProductCard";
 import { motion, AnimatePresence } from "framer-motion";
 
 export const Wishlist: React.FC = () => {
   const { items: wishlistItems } = useAppSelector((state) => state.wishlist);
+  const dispatch = useAppDispatch();
 
   if (wishlistItems.length === 0) {
     return (
@@ -48,9 +50,17 @@ export const Wishlist: React.FC = () => {
                 {wishlistItems.length} {wishlistItems.length === 1 ? 'item' : 'items'} in your wishlist
               </p>
             </div>
-            <Link to="/cart" className="group flex items-center gap-3 text-[10px] uppercase tracking-[0.4em] font-bold text-neutral-900 border-b border-neutral-900 pb-2 transition-all hover:gap-5">
-              View Shopping Bag <ShoppingBag size={14} />
-            </Link>
+            <div className="flex items-center gap-8">
+              <button 
+                onClick={() => dispatch(clearWishlist())}
+                className="group flex items-center gap-3 text-[10px] uppercase tracking-[0.4em] font-bold text-neutral-400 hover:text-neutral-900 border-b border-transparent hover:border-neutral-900 pb-2 transition-all"
+              >
+                Clear All <X size={14} />
+              </button>
+              <Link to="/cart" className="group flex items-center gap-3 text-[10px] uppercase tracking-[0.4em] font-bold text-neutral-900 border-b border-neutral-900 pb-2 transition-all hover:gap-5">
+                View Shopping Bag <ShoppingBag size={14} />
+              </Link>
+            </div>
           </div>
         </div>
 

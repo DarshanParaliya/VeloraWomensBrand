@@ -5,6 +5,7 @@ export interface CartItem {
   product: Product;
   quantity: number;
   size?: string;
+  selected: boolean;
 }
 
 interface CartState {
@@ -31,8 +32,9 @@ const initialState: CartState = loadFromStorage() || {
 };
 
 function calculateTotals(state: CartState) {
-  state.totalQuantity = state.cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  state.totalAmount = state.cartItems.reduce(
+  const selectedItems = state.cartItems.filter(item => item.selected);
+  state.totalQuantity = selectedItems.reduce((sum, item) => sum + item.quantity, 0);
+  state.totalAmount = selectedItems.reduce(
     (sum, item) => sum + Number(item.product.price) * item.quantity,
     0
   );
@@ -51,7 +53,7 @@ const cartSlice = createSlice({
       if (existingItem) {
         existingItem.quantity += quantity;
       } else {
-        state.cartItems.push({ product, quantity, size });
+        state.cartItems.push({ product, quantity, size, selected: true });
       }
       calculateTotals(state);
     },
@@ -83,8 +85,22 @@ const cartSlice = createSlice({
       state.totalQuantity = 0;
       state.totalAmount = 0;
     },
+    toggleSelectItem: (state, action: PayloadAction<{ id: number; size?: string }>) => {
+      const { id, size } = action.payload;
+      const item = state.cartItems.find(
+        (item) => item.product.id === id && item.size === size
+      );
+      if (item) {
+        item.selected = !item.selected;
+        calculateTotals(state);
+      }
+    },
+    selectAllItems: (state, action: PayloadAction<boolean>) => {
+      state.cartItems.forEach((item) => (item.selected = action.payload));
+      calculateTotals(state);
+    },
   },
 });
 
-export const { addItem, removeItem, updateQuantity, clearCart } = cartSlice.actions;
+export const { addItem, removeItem, updateQuantity, clearCart, toggleSelectItem, selectAllItems } = cartSlice.actions;
 export default cartSlice.reducer;

@@ -5,7 +5,8 @@ import { Trash2, Plus, Minus, ShoppingBag } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export const CartSummary: React.FC = () => {
-  const { cartItems } = useAppSelector((state) => state.cart);
+  const { cartItems: allCartItems } = useAppSelector((state) => state.cart);
+  const cartItems = allCartItems.filter(item => item.selected);
   const dispatch = useAppDispatch();
 
   if (cartItems.length === 0) {

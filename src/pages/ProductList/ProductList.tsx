@@ -18,12 +18,19 @@ export const ProductList: React.FC = () => {
   const navigate = useNavigate();
   
   const [sortBy, setSortBy] = useState("Featured");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>([]);
   const [isNewOnly, setIsNewOnly] = useState(false);
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string | null>(null);
   const [urlCategory, setUrlCategory] = useState<string | null>(null);
   const [featuredId, setFeaturedId] = useState<number | null>(null);
+
+  const priceRanges = [
+    "Under $50",
+    "$50 - $100",
+    "$100 - $200",
+    "$200 & Above"
+  ];
 
   // Read all URL params on mount and on URL change
   useEffect(() => {
@@ -50,7 +57,8 @@ export const ProductList: React.FC = () => {
     }
 
     if (q || cat) {
-      setSelectedCategory(null);
+      setSelectedCategories([]);
+      setSelectedPriceRanges([]);
     }
   }, [searchParams]);
 
@@ -90,8 +98,8 @@ export const ProductList: React.FC = () => {
     }
 
     // Filter by sidebar category (secondary filter)
-    if (selectedCategory) {
-      result = result.filter(p => p.category === selectedCategory);
+    if (selectedCategories.length > 0) {
+      result = result.filter(p => selectedCategories.includes(p.category));
     }
 
     // Exclude the featured product from the main grid to avoid duplication
@@ -128,20 +136,35 @@ export const ProductList: React.FC = () => {
         break;
     }
 
+    // Filter by Price Range
+    if (selectedPriceRanges.length > 0) {
+      result = result.filter(p => {
+        const price = parseFloat(p.price);
+        return selectedPriceRanges.some(range => {
+          if (range === "Under $50") return price < 50;
+          if (range === "$50 - $100") return price >= 50 && price <= 100;
+          if (range === "$100 - $200") return price >= 100 && price <= 200;
+          if (range === "$200 & Above") return price > 200;
+          return false;
+        });
+      });
+    }
+
     return result;
-  }, [products, selectedCategory, sortBy, searchQuery, urlCategory, featuredId, isNewOnly]);
+  }, [products, selectedCategories, selectedPriceRanges, sortBy, searchQuery, urlCategory, featuredId, isNewOnly]);
 
   const clearAllFilters = () => {
     setSearchQuery(null);
     setUrlCategory(null);
     setFeaturedId(null);
-    setSelectedCategory(null);
+    setSelectedCategories([]);
+    setSelectedPriceRanges([]);
     setIsNewOnly(false);
     setSortBy("Featured");
     navigate("/products");
   };
 
-  const isFiltered = !!(searchQuery || urlCategory || selectedCategory || isNewOnly);
+  const isFiltered = !!(searchQuery || urlCategory || selectedCategories.length > 0 || isNewOnly || selectedPriceRanges.length > 0);
   const sortOptions = ["Featured", "New Arrivals", "Price: Low to High", "Price: High to Low", "Rating"];
 
   // Active label for the page header
@@ -172,188 +195,183 @@ export const ProductList: React.FC = () => {
       </div>
 
       <Container>
-        {/* Active filter chips */}
-        <AnimatePresence>
-          {isFiltered && (
-            <motion.div
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              className="flex items-center gap-3 py-6 flex-wrap"
-            >
-              <span className="text-[9px] uppercase tracking-[0.3em] text-neutral-400 font-bold">Active:</span>
-              {searchQuery && (
-                <span className="flex items-center gap-2 bg-neutral-900 text-white text-[10px] uppercase tracking-[0.2em] px-3 py-1.5 rounded-full">
-                  Search: "{searchQuery}"
-                  <button onClick={() => { setSearchQuery(null); navigate(urlCategory ? `/products?category=${encodeURIComponent(urlCategory)}` : "/products"); }}>
-                    <X size={10} />
-                  </button>
-                </span>
-              )}
-              {urlCategory && (
-                <span className="flex items-center gap-2 bg-neutral-900 text-white text-[10px] uppercase tracking-[0.2em] px-3 py-1.5 rounded-full">
-                  {urlCategory}
-                  <button onClick={clearAllFilters}><X size={10} /></button>
-                </span>
-              )}
-              {isNewOnly && (
-                <span className="flex items-center gap-2 bg-neutral-900 text-white text-[10px] uppercase tracking-[0.2em] px-3 py-1.5 rounded-full">
-                  New Arrivals
-                  <button onClick={() => { setIsNewOnly(false); setSortBy("Featured"); navigate("/products"); }}>
-                    <X size={10} />
-                  </button>
-                </span>
-              )}
-              <button
-                onClick={clearAllFilters}
-                className="text-[9px] uppercase tracking-[0.2em] text-neutral-400 hover:text-neutral-900 transition-colors border-b border-neutral-200 ml-2"
-              >
-                Clear All
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
+      
 
-        {/* Sticky Utility Bar */}
-        <div className="sticky top-20 z-30 bg-white/95 backdrop-blur-md border-b border-neutral-100 mb-12 mt-[-1px]">
-          <div className="flex flex-col md:flex-row justify-between items-center py-8 gap-8 px-2">
-            <div className="flex items-center gap-12">
-              <button
-                onClick={() => setIsFilterOpen(!isFilterOpen)}
-                className={`flex items-center gap-3 text-[10px] tracking-[0.3em] uppercase font-medium transition-colors ${isFilterOpen ? "text-neutral-900" : "text-neutral-500 hover:text-neutral-900"}`}
-              >
-                <Filter size={14} strokeWidth={1.5} />
-                {isFilterOpen ? "Close Filters" : "Filters"}
-              </button>
-              <div className="h-4 w-[1px] bg-neutral-200 hidden md:block" />
-              <p className="text-[10px] tracking-[0.3em] uppercase text-neutral-400">
-                {(featuredProduct ? 1 : 0) + filteredProducts.length} Pieces
-              </p>
-              {selectedCategory && (
-                <button
-                  onClick={() => setSelectedCategory(null)}
-                  className="flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase font-medium text-neutral-500 bg-neutral-100 px-3 py-1 rounded-full hover:bg-neutral-200 transition-colors"
-                >
-                  {selectedCategory} <X size={10} />
-                </button>
-              )}
-            </div>
-
-            <div className="flex items-center gap-8">
-              <div className="relative group">
-                <button className="flex items-center gap-3 text-[10px] tracking-[0.3em] uppercase font-medium hover:text-neutral-500 transition-colors">
-                  Sort By: {sortBy}
-                  <ChevronDown size={14} strokeWidth={1.5} />
-                </button>
-                <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-neutral-100 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                  {sortOptions.map(option => (
+        <div className="flex flex-col lg:flex-row gap-12 mt-8">
+          {/* Sidebar Filters */}
+          <aside className="w-full lg:w-64 flex-shrink-0 space-y-12">
+            <div className="sticky top-32 space-y-12">
+              {/* Categories */}
+              <div className="space-y-6">
+                <h3 className="text-[10px] tracking-[0.3em] uppercase font-bold text-neutral-900 border-b border-neutral-100 pb-4 flex items-center gap-2">
+                  <Filter size={12} strokeWidth={2} /> Categories
+                </h3>
+                <div className="flex flex-col gap-4">
+                  {categories.map(category => (
                     <button
-                      key={option}
-                      onClick={() => setSortBy(option)}
-                      className={`w-full text-left px-6 py-4 text-[10px] tracking-[0.2em] uppercase transition-colors hover:bg-neutral-50 ${sortBy === option ? "text-neutral-900 font-bold" : "text-neutral-500"}`}
-                    >
-                      {option}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Filter Panel */}
-          {isFilterOpen && (
-            <div className="pb-12 animate-in fade-in slide-in-from-top-4 duration-500 border-t border-neutral-50 px-2 mt-2">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-12 py-8">
-                <div className="space-y-6">
-                  <h3 className="text-[10px] tracking-[0.3em] uppercase font-bold text-neutral-900">Categories</h3>
-                  <div className="flex flex-col gap-4">
-                    {categories.map(category => (
-                      <button
-                        key={category}
-                        onClick={() => {
-                          setSelectedCategory(category === selectedCategory ? null : category);
-                          setIsFilterOpen(false);
-                          // Clear the main search/category URL parameters so they don't fight with the sidebar
-                          if (urlCategory || searchQuery || featuredId) {
-                            navigate("/products");
-                          }
-                        }}
-                        className={`text-left text-[11px] tracking-[0.1em] uppercase transition-colors ${selectedCategory === category ? "text-neutral-900 font-bold" : "text-neutral-500"}`}
-                      >
-                        {category}
-                      </button>
-                    ))}
-                    <button
+                      key={category}
                       onClick={() => {
-                        setSelectedCategory(null);
-                        setIsFilterOpen(false);
+                        setSelectedCategories(prev => 
+                          prev.includes(category) 
+                            ? prev.filter(c => c !== category) 
+                            : [...prev, category]
+                        );
                         if (urlCategory || searchQuery || featuredId) {
                           navigate("/products");
                         }
                       }}
-                      className={`text-left text-[11px] tracking-[0.1em] uppercase transition-colors ${!selectedCategory ? "text-neutral-900 font-bold" : "text-neutral-500"}`}
+                      className="group flex items-center gap-3 w-full text-left transition-colors"
                     >
+                      <div className={`w-4 h-4 border rounded-sm flex items-center justify-center transition-all ${selectedCategories.includes(category) ? 'bg-neutral-900 border-neutral-900' : 'border-neutral-300 group-hover:border-neutral-900'}`}>
+                        {selectedCategories.includes(category) && <X size={10} className="text-white" />}
+                      </div>
+                      <span className={`text-[11px] tracking-[0.1em] uppercase transition-colors ${selectedCategories.includes(category) ? "text-neutral-900 font-bold" : "text-neutral-500 group-hover:text-neutral-900"}`}>
+                        {category}
+                      </span>
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => {
+                      setSelectedCategories([]);
+                      if (urlCategory || searchQuery || featuredId) {
+                        navigate("/products");
+                      }
+                    }}
+                    className="group flex items-center gap-3 w-full text-left transition-colors"
+                  >
+                    <div className={`w-4 h-4 border rounded-sm flex items-center justify-center transition-all ${selectedCategories.length === 0 ? 'bg-neutral-900 border-neutral-900' : 'border-neutral-300 group-hover:border-neutral-900'}`}>
+                      {selectedCategories.length === 0 && <X size={10} className="text-white" />}
+                    </div>
+                    <span className={`text-[11px] tracking-[0.1em] uppercase transition-colors ${selectedCategories.length === 0 ? "text-neutral-900 font-bold" : "text-neutral-500 group-hover:text-neutral-900"}`}>
                       All Collections
+                    </span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Price Range */}
+              <div className="space-y-6">
+                <h3 className="text-[10px] tracking-[0.3em] uppercase font-bold text-neutral-900 border-b border-neutral-100 pb-4">Price Range</h3>
+                <div className="flex flex-col gap-4">
+                  {priceRanges.map(range => (
+                    <button
+                      key={range}
+                      onClick={() => {
+                        setSelectedPriceRanges(prev => 
+                          prev.includes(range) 
+                            ? prev.filter(r => r !== range) 
+                            : [...prev, range]
+                        );
+                      }}
+                      className="group flex items-center gap-3 w-full text-left transition-colors"
+                    >
+                      <div className={`w-4 h-4 border rounded-sm flex items-center justify-center transition-all ${selectedPriceRanges.includes(range) ? 'bg-neutral-900 border-neutral-900' : 'border-neutral-300 group-hover:border-neutral-900'}`}>
+                        {selectedPriceRanges.includes(range) && <X size={10} className="text-white" />}
+                      </div>
+                      <span className={`text-[11px] tracking-[0.1em] uppercase transition-colors ${selectedPriceRanges.includes(range) ? "text-neutral-900 font-bold" : "text-neutral-500 group-hover:text-neutral-900"}`}>
+                        {range}
+                      </span>
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => setSelectedPriceRanges([])}
+                    className="group flex items-center gap-3 w-full text-left transition-colors"
+                  >
+                    <div className={`w-4 h-4 border rounded-sm flex items-center justify-center transition-all ${selectedPriceRanges.length === 0 ? 'bg-neutral-900 border-neutral-900' : 'border-neutral-300 group-hover:border-neutral-900'}`}>
+                      {selectedPriceRanges.length === 0 && <X size={10} className="text-white" />}
+                    </div>
+                    <span className={`text-[11px] tracking-[0.1em] uppercase transition-colors ${selectedPriceRanges.length === 0 ? "text-neutral-900 font-bold" : "text-neutral-500 group-hover:text-neutral-900"}`}>
+                      All Prices
+                    </span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Our Heritage */}
+              <div className="space-y-6">
+                <h3 className="text-[10px] tracking-[0.3em] uppercase font-bold text-neutral-900 border-b border-neutral-100 pb-4">Our Heritage</h3>
+                <p className="text-[12px] text-neutral-500 font-light leading-relaxed">
+                  Every piece in our collection is curated with an emphasis on sustainable luxury and timeless design.
+                </p>
+              </div>
+            </div>
+          </aside>
+
+          {/* Main Content Area */}
+          <div className="flex-1">
+            {/* Utility Bar (Pieces & Sort) */}
+            <div className="sticky top-20 z-30 bg-white/95 backdrop-blur-md flex justify-between items-center py-4 border-b border-neutral-100 mb-8 mt-[-1px]">
+              <div className="flex items-center gap-8 md:gap-12">
+                <p className="text-[10px] tracking-[0.3em] uppercase text-neutral-400">
+                  {(featuredProduct ? 1 : 0) + filteredProducts.length} Pieces
+                </p>
+                {isFiltered && (
+                  <div className="flex items-center gap-4 border-l border-neutral-100 pl-8 md:pl-12">
+                    <span className="text-[9px] uppercase tracking-[0.3em] text-neutral-400 font-bold">Active:</span>
+                    <button
+                      onClick={clearAllFilters}
+                      className="text-[9px] uppercase tracking-[0.2em] text-neutral-900 border-b border-neutral-200 leading-tight hover:text-neutral-500 hover:border-neutral-500 transition-all font-medium"
+                    >
+                      Clear All
                     </button>
                   </div>
-                </div>
-                <div className="space-y-6">
-                  <h3 className="text-[10px] tracking-[0.3em] uppercase font-bold text-neutral-900">Price Range</h3>
-                  <p className="text-[11px] text-neutral-400 italic">Showing all price points</p>
-                </div>
-                <div className="space-y-6 col-span-2">
-                  <h3 className="text-[10px] tracking-[0.3em] uppercase font-bold text-neutral-900">Our Heritage</h3>
-                  <p className="text-sm text-neutral-500 font-light leading-relaxed max-w-md">
-                    Every piece in our collection is curated with an emphasis on sustainable luxury and timeless design.
-                  </p>
+                )}
+              </div>
+
+              <div className="flex items-center gap-8">
+                <div className="relative group">
+                  <button className="flex items-center gap-3 text-[10px] tracking-[0.3em] uppercase font-medium hover:text-neutral-500 transition-colors">
+                    Sort By: {sortBy}
+                    <ChevronDown size={14} strokeWidth={1.5} />
+                  </button>
+                  <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-neutral-100 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                    {sortOptions.map(option => (
+                      <button
+                        key={option}
+                        onClick={() => setSortBy(option)}
+                        className={`w-full text-left px-6 py-4 text-[10px] tracking-[0.2em] uppercase transition-colors hover:bg-neutral-50 ${sortBy === option ? "text-neutral-900 font-bold" : "text-neutral-500"}`}
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
-          )}
+
+            {/* Featured Hero Product */}
+            <AnimatePresence>
+              {featuredProduct && (
+                <motion.div
+                  key={featuredProduct.id}
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 24 }}
+                  transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
+                  className="mb-12"
+                >
+                  <div className="flex items-center gap-4 mb-6">
+                    <span className="text-[9px] uppercase tracking-[0.4em] text-neutral-400 font-bold">Featured Pick</span>
+                    <div className="flex-1 h-[1px] bg-neutral-100" />
+                  </div>
+                  <FeaturedHeroCard product={featuredProduct} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Main Product Grid */}
+            <ProductGrid
+              products={filteredProducts}
+              isLoading={isLoading}
+              emptyMessage={
+                isFiltered
+                  ? "No pieces found matching your search. Try a different term."
+                  : "No pieces found. Try adjusting your filters."
+              }
+            />
+          </div>
         </div>
 
-        {/* ── Featured Hero Product ─────────────────────────────── */}
-        <AnimatePresence>
-          {featuredProduct && (
-            <motion.div
-              key={featuredProduct.id}
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 24 }}
-              transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
-              className="mb-20"
-            >
-              {/* Label */}
-              <div className="flex items-center gap-4 mb-8">
-                <span className="text-[9px] uppercase tracking-[0.4em] text-neutral-400 font-bold">Featured Pick</span>
-                <div className="flex-1 h-px bg-neutral-100" />
-              </div>
-
-              <FeaturedHeroCard product={featuredProduct} />
-
-              {/* Related items label */}
-              {filteredProducts.length > 0 && (
-                <div className="flex items-center gap-4 mt-20 mb-0">
-                  <span className="text-[9px] uppercase tracking-[0.4em] text-neutral-400 font-bold">
-                    More in {featuredProduct.category}
-                  </span>
-                  <div className="flex-1 h-px bg-neutral-100" />
-                </div>
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* ── Main Product Grid ─────────────────────────────────── */}
-        <ProductGrid
-          products={filteredProducts}
-          isLoading={isLoading}
-          emptyMessage={
-            isFiltered
-              ? "No pieces found matching your search. Try a different term."
-              : "No pieces found. Try adjusting your filters."
-          }
-        />
       </Container>
     </main>
   );
