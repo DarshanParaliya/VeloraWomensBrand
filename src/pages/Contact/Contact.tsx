@@ -97,17 +97,6 @@ const Contact: React.FC = () => {
 
            <div className="lg:col-span-6">
               <form className="space-y-10" onSubmit={handleSubmit}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="space-y-2">
-                    <label className="text-[10px] uppercase tracking-[0.3em] text-neutral-400 ml-1">First Name</label>
-                    <Input required className="rounded-none border-0 border-b border-neutral-200 focus-visible:ring-0 focus-visible:border-neutral-900 transition-all px-1 bg-transparent placeholder:text-neutral-300 h-12" placeholder="Jane" />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-[10px] uppercase tracking-[0.3em] text-neutral-400 ml-1">Last Name</label>
-                    <Input required className="rounded-none border-0 border-b border-neutral-200 focus-visible:ring-0 focus-visible:border-neutral-900 transition-all px-1 bg-transparent placeholder:text-neutral-300 h-12" placeholder="Doe" />
-                  </div>
-                </div>
-
                 <div className="space-y-2">
                   <label className="text-[10px] uppercase tracking-[0.3em] text-neutral-400 ml-1">Email Address</label>
                   <Input required type="email" className="rounded-none border-0 border-b border-neutral-200 focus-visible:ring-0 focus-visible:border-neutral-900 transition-all px-1 bg-transparent placeholder:text-neutral-300 h-12" placeholder="jane@example.com" />

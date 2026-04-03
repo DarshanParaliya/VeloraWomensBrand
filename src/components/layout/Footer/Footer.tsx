@@ -1,11 +1,43 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Instagram, Music2, Share2 as Pinterest, ArrowRight, Twitter } from "lucide-react";
 import { Container } from "../Container";
 import { FOOTER_SECTIONS, SOCIAL_LINKS, COPYRIGHT_TEXT } from "./constants";
 import { FooterSection, FooterLink } from "./types";
+import { useToast } from "@/hooks/use-toast";
 
 export const Footer: React.FC = () => {
+  const [email, setEmail] = useState("");
+  const { toast } = useToast();
+
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) {
+      toast({
+        title: "Error",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Simple email regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a correct email format.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    toast({
+      title: "Subscription Successful",
+      description: "Welcome to Velora! You've been added to our mailing list.",
+    });
+    setEmail("");
+  };
   return (
     <footer className="bg-white border-t border-neutral-100 pt-24 pb-12">
       <Container>
@@ -21,16 +53,24 @@ export const Footer: React.FC = () => {
             {/* Newsletter */}
             <div className="mb-10 max-w-xs">
               <h4 className="text-[10px] font-bold tracking-[0.3em] uppercase mb-4">Newsletter</h4>
-              <div className="flex border-b border-neutral-200 focus-within:border-black transition-colors py-2">
+              <form 
+                onSubmit={handleSubscribe}
+                className="flex border-b border-neutral-200 focus-within:border-black transition-colors py-2"
+              >
                 <input 
                   type="email" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="Join our mailing list" 
                   className="bg-transparent text-sm font-light w-full outline-none placeholder:text-neutral-300"
                 />
-                <button className="text-neutral-400 hover:text-black transition-colors px-2">
+                <button 
+                  type="submit"
+                  className="text-neutral-400 hover:text-black transition-colors px-2"
+                >
                   <ArrowRight size={16} strokeWidth={1.5} />
                 </button>
-              </div>
+              </form>
             </div>
 
             <div className="flex space-x-6">

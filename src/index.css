@@ -50,6 +50,12 @@
     --ring: 218 70% 33%;
 
     --radius: 1rem;
+
+    /* ── Sustainability Theme ── */
+    --sage-green: 133 11% 66%; /* #9CB2A1 converted to HSL-ish */
+    --off-white: 0 0% 97%;    /* #F7F7F7 */
+    --earthy-sage: #9CB2A1;
+    --earthy-white: #F7F7F7;
   }
 
   .dark {
@@ -80,6 +86,12 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 218 70% 33%;
+
+    /* ── Sustainability Theme Dark (Muted) ── */
+    --sage-green: 133 11% 40%;
+    --off-white: 0 0% 10%;
+    --earthy-sage: #5D6B5F;
+    --earthy-white: #1A1A1A;
   }
 
   body {
